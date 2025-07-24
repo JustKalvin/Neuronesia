@@ -3,8 +3,14 @@ import '../style/style.css'
 
 const Navbar = () => {
   return (
-    <div className='bg-red-100 text-black'>
-        Jojo
+    <div className=''>
+        <div>
+            <img src="" alt="Logo" />
+
+            <div>
+                <Link>About</Link>
+            </div>
+        </div>
     </div>
   )
 }
