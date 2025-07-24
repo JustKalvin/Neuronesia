@@ -123,10 +123,17 @@ const Landing = () => {
       <Faq />
 
       <h1 className="text-6xl font-bold m-10 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
-        Our Teams
+        Our Team
       </h1>
-      <div className="flex flex-col justify-center items-center mb-30">
-        <img src={teams} alt="" className="grayscale w-[500px] rounded-xl max-sm:w-[300px]" />
+      <div className="relative group w-[600px] h-[500px] rounded-xl overflow-hidden mx-auto mb-30">
+        <div className="transition duration-300 group-hover:blur-sm">
+          <img src={teams} alt="" className="grayscale w-full h-auto rounded-xl" />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+          <p className="text-white text-5xl font-bold rounded-lg text-center pb-13">
+            Thank You!
+          </p>
+        </div>
       </div>
       <Footer />
     </div>
