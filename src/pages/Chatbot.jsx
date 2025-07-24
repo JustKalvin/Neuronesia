@@ -216,7 +216,7 @@ const Chatbot = () => {
         {/* Profile + Dropdown */}
         <div className="relative">
           <img
-            src={users}
+            src={user?.user_metadata?.avatar_url}
             alt="profile-png"
             className="w-[45px] h-[45px] rounded-full border cursor-pointer"
             onClick={() => setIsOpen((prev) => !prev)}
@@ -242,9 +242,8 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+              }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -260,10 +259,10 @@ const Chatbot = () => {
                         selectedMentor === "Michael E. Gerber"
                           ? michael
                           : selectedMentor === "Stephen R. Covey"
-                          ? covey
-                          : selectedMentor === "Eric Ries"
-                          ? eric
-                          : users // fallback jika belum pilih mentor
+                            ? covey
+                            : selectedMentor === "Eric Ries"
+                              ? eric
+                              : users // fallback jika belum pilih mentor
                       }
                       className="w-7 h-7 rounded-full object-cover"
                     />
@@ -274,11 +273,10 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${
-                  msg.sender === "user"
+                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
                     ? "bg-black text-left text-white"
                     : "bg-white text-left border-1"
-                }`}
+                  }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -323,11 +321,10 @@ const Chatbot = () => {
               onClick={() => handleUploadFile()}
               type="button"
               disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-                uploading
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
                   ? "bg-gray-400 text-white cursor-not-allowed"
                   : "bg-black text-white hover:bg-white hover:text-black"
-              }`}
+                }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
@@ -368,9 +365,8 @@ const Chatbot = () => {
 
           <button
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-              analyticClicked ? "bg-black text-white" : "bg-white text-black"
-            }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
           >
             Analytics
           </button>

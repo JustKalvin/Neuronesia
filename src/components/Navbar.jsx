@@ -11,7 +11,7 @@ const Navbar = () => {
   // Define isLoggedIn state to control visibility of login button vs. avatar
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Initialize as false (not logged in)
   const dropdownRef = useRef(null);
-
+  const [user, setUser] = useState(null);
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   // Close dropdown if clicked outside
@@ -27,7 +27,6 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(null);
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
@@ -44,7 +43,7 @@ const Navbar = () => {
     <nav className="h-[80px] bg-white flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
       {/* Logo */}
       <Link to="/" className="flex items-center space-x-2">
-        <img src={Logo} alt="" className="w-[120px]"/>
+        <img src={Logo} alt="" className="w-[120px]" />
       </Link>
 
       {/* Right side - Login button or User avatar/dropdown */}
@@ -59,7 +58,7 @@ const Navbar = () => {
         ) : (
           <>
             <img
-              src={users}
+              src={user?.user_metadata?.avatar_url}
               alt="User"
               onClick={toggleDropdown}
               className="w-10 h-10 rounded-full border-1 border-black cursor-pointer"
