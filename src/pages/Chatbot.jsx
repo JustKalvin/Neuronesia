@@ -11,14 +11,33 @@ import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+
+
+
 
 const Chatbot = () => {
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition();
+
+  const handleStart = () => {
+    SpeechRecognition.startListening({ continuous: true });
+  };
+
+  const handleStop = () => {
+    SpeechRecognition.stopListening();
+  };
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [analyticClicked, setAnalyticClicked] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [micClicked, setMicClicked] = useState(false);
 
   // ✅ State untuk namespace Pinecone
   const [mentorCode, setMentorCode] = useState("");
@@ -114,6 +133,13 @@ const Chatbot = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (micClicked) {
+      setInput(transcript);
+    }
+  }, [transcript]);
+
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -204,6 +230,11 @@ const Chatbot = () => {
       setUploading(false); // ✅ selesai loading
     }
   };
+
+  const handleMicClicked = () => {
+    setMicClicked(micClicked => (!micClicked))
+  }
+
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
@@ -344,6 +375,34 @@ const Chatbot = () => {
           </div>
         ) : (
           <div className="flex items-center gap-3">
+            {/* 🎙️ Tombol Mic */}
+            {micClicked ? (
+              <button
+                type="button"
+                onClick={() => {
+                  handleMicClicked();
+                  handleStop()
+                }}
+                className={"px-3 py-2 rounded-lg border transition-colors bg-red-500 text-white hover:bg-red-600"}
+              >
+                ❌ Stop
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  handleMicClicked()
+                  resetTranscript();
+                  handleStart(); // ✅ panggil fungsi handleStart (pakai 'id-ID')
+                }}
+                className={`px-3 py-2 rounded-lg border transition-colors ${listening ? "bg-green-500 text-white" : "bg-white text-black hover:bg-gray-100"}`}
+
+              >
+                🎙️
+              </button>)}
+
+
+            {/* Input text */}
             <input
               type="text"
               placeholder="Ask AI..."
@@ -352,14 +411,23 @@ const Chatbot = () => {
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               className="text-black flex-1 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
+
+
+            {/* Tombol Send */}
             <button
               type="button"
-              onClick={handleSend}
+              onClick={() => {
+                handleSend();
+                resetTranscript();
+                setInput(""); // ❗ Hapus isi input setelah kirim
+              }}
               className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
             >
               Send
             </button>
+
           </div>
+
         )}
 
         {/* Mentor dropdown + Analytics toggle */}
