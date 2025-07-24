@@ -70,7 +70,7 @@ function Login() {
       (_event, session) => {
         setUser(session?.user || null);
         if (session?.user) {
-          navigate("/chatbot");
+          navigate("/");
         }
       }
     );

@@ -52,7 +52,7 @@ const Navbar = () => {
         {!user ? (
           <button
             onClick={() => navigate("/login")}
-            className="px-4 py-2 rounded-full bg-black text-white hover:bg-white hover:text-black transition"
+            className="px-5 py-2 rounded-xl bg-black text-white hover:bg-white hover:text-black hover:border-1 duration-300 transition cursor-pointer"
           >
             Login
           </button>
@@ -62,7 +62,7 @@ const Navbar = () => {
               src={users}
               alt="User"
               onClick={toggleDropdown}
-              className="w-10 h-10 rounded-full border-2 border-gray-300 cursor-pointer"
+              className="w-10 h-10 rounded-full border-1 border-black cursor-pointer"
             />
             {isOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-50">

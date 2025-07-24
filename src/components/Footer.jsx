@@ -2,19 +2,25 @@ import logo from "../assets/logo/Logo-Aivise-White.png";
 
 const Footer = () => {
   return (
-    <footer className="pt-5 h-50 bg-black text-white py-4">
-      <div className="relative container mx-auto">
-        <div className="absolute inset-y-0 right-0">
-            <h4 className="text-2xl font-bold">Subscribe</h4>
-            <p className="max-w-60 text-base/5">Enter your email to get notified about our new solutions!</p>
-            <input type="text" className="mt-5 bg-white text-black rounded" placeholder="Enter your email..."/>
-            <button type="button" className="px-3 bg-gray-500 rounded">Send</button>
-            <p>&copy; {new Date().getFullYear()} Aivise</p>
+    <footer className="pt-5 h-32 bg-black text-white py-5 px-15 flex justify-between items-center max-sm:flex-col max-sm:justify-center max-sm:gap-3">
+      <div className="flex items-center">
+        <p>Made by Neuronesia</p>
+      </div>
+      <div className="right-0 flex flex-col gap-2 max-sm:gap-0">
+        <div className="flex gap-1">
+          <input
+            type="text"
+            className="bg-white text-black rounded px-3 py-2"
+            placeholder="Enter your email..."
+          />
+          <button
+            type="button"
+            className="px-3 bg-black rounded border-1 border-white text-white hover:bg-white hover:text-black hover:border-white cursor-pointer duration-300"
+          >
+            Send
+          </button>
         </div>
-        <div className="absolute inset-y-0 left-0">
-            <img src={logo} alt="" className="w-[120px]"/>
-        </div>
-     </div>
+      </div>
     </footer>
   );
 };
