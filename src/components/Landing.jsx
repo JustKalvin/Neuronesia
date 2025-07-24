@@ -1,9 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../style/style.css";
 import { Link } from "react-router-dom";
+import { supabase } from "../lib/supabaseClient";
 
 const Landing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Cek apakah ada user session
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsLoggedIn(!!user);
+    });
+
+    // Dengarkan perubahan status auth (login/logout)
+    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session?.user);
+    });
+
+    return () => {
+      subscription.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <div className="flex flex-col h-[100vh] justify-center items-center">
