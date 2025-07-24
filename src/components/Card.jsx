@@ -1,37 +1,18 @@
-import user from "../assets/user/user.png";
-import { useState } from "react";
-
-export default function Card() {
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imgURL = URL.createObjectURL(file);
-      setImage(imgURL);
-    }
-  };
-
+export default function Card({ image, name, description }) {
   return (
-    <div className="max-w-sm mx-auto p-4 bg-white shadow-xl rounded-2xl space-y-4">
-        <img src={user} alt="" className="h-50 w-auto mx-auto block"/>
-        <h1 className="text-xl font-semibold text-gray-800">Name</h1>
-        <p className="text-sm text-gray-600">Description</p>
-      {/* <input
-        type="text"
-        placeholder="Enter a description..."
-        className="w-full p-2 border rounded"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      /> */}
+    <div className="relative w-80 h-55 bg-white shadow-xl rounded-2xl overflow-hidden group">
+      <img
+        src={image}
+        alt={name}
+        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+      />
 
-      {/* <input type="file" accept="image/*" onChange={handleImageChange} />
-
-      <div className="space-y-2">
-        {image && <img src={image} alt="Uploaded" className="w-full h-48 object-cover rounded" />}
-        {description && <p className="text-gray-700">{description}</p>}
-      </div> */}
+      {/* Frosted Glass Overlay */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-center items-center p-4 text-center space-y-2 
+        bg-white/60 backdrop-blur-md rounded-2xl">
+        <h1 className="text-xl font-semibold text-black font-bold text-Poppins">{name}</h1>
+        <p className="text-sm text-gray-700">{description}</p>
+      </div>
     </div>
   );
 }
