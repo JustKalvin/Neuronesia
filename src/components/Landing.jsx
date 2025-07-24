@@ -44,14 +44,14 @@ const Landing = () => {
       <Navbar />
       <hr />
       <div className="flex flex-col items-center justify-center mt-25 md:mt-40">
-        <div className="items-center flex flex-col mb-32 xl:mb-0 md:mb-10 max-md:mb-5 max-sm:mb-10">
+        <div className="items-center flex flex-col mb-32 xl:mb-0 md:mb-10 max-md:mb-5 max-sm:mb-5">
           <h1 className="text-6xl font-bold mb-4 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
             Meet Aivise!
           </h1>
-          <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5">
+          <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5 max-sm:px-5">
             Your Intelligent Business Mentor
           </h3>
-          <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-md:px-5">
+          <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-md:px-5 max-sm:px-5">
             Aivise is an AI mentor built to help business owners by providing
             advice grounded in real books from expert authors. Instead of giving
             generic answers, Aivise learns directly from trusted business
@@ -76,7 +76,7 @@ const Landing = () => {
             </a>
           </div>
         </div>
-          <div className="px-[50px] md:px-[200px] mt-0 rounded">
+          <div className="px-[50px] md:px-[200px] xl:mt-15 rounded">
             <video autoPlay muted loop playsInline className="w-full h-auto rounded-[15px]">
               <source src={video} type="video/mp4"/>
             </video>
@@ -84,12 +84,12 @@ const Landing = () => {
 
 
           <div>
-            <h1 className="text-6xl font-bold text-center mb-5 mt-20">Meet your mentors!</h1>
-            <p className="text-md mb-6 text-center max-w-2xl font-Poppins">Aivise is powered by the insights of experienced business mentors whose ideas are shared through widely respected books. Our AI learns from a carefully selected library of real-world business literature, covering topics such as leadership, strategy, innovation, and growth. This ensures that the guidance Aivise provides is rooted in proven principles from trusted experts across the business world.
+            <h1 className="text-6xl font-bold text-center mb-5 mt-25 max-md:text-4xl max-lg:text-5xl">Meet your mentors!</h1>
+            <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-sm:px-5">Aivise is powered by the insights of experienced business mentors whose ideas are shared through widely respected books. Our AI learns from a carefully selected library of real-world business literature, covering topics such as leadership, strategy, innovation, and growth. This ensures that the guidance Aivise provides is rooted in proven principles from trusted experts across the business world.
             </p>
           </div>
         </div>
-        <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-20">
+        <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-10 max-sm:mb-5">
           <Card 
             image={user1}
             name="Michael E. Gerber"
