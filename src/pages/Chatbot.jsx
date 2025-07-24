@@ -44,8 +44,15 @@ const Chatbot = () => {
     }
   };
 
+  const [mentorLocked, setMentorLocked] = useState(false);
+
   const handleSend = async () => {
     if (input.trim() === "") return;
+
+    // 🔒 Lock mentor selection after first message
+    if (!mentorLocked) {
+      setMentorLocked(true);
+    }
 
     const newMessage = {
       id: messages.length + 1,
@@ -58,12 +65,11 @@ const Chatbot = () => {
     setLoading(true);
 
     try {
-      // ✅ Kirim ke API dengan tambahan namespace
       const response = await axios.post(
         "https://primary-production-9ee5.up.railway.app/webhook/bookrag",
         {
           message: input,
-          namespace: mentorCode, // ✅ kirim namespace ke API
+          namespace: mentorCode,
         },
         {
           headers: {
@@ -71,7 +77,6 @@ const Chatbot = () => {
           },
         }
       );
-      console.log(response);
 
       const botReply = {
         id: messages.length + 2,
@@ -353,6 +358,7 @@ const Chatbot = () => {
           <select
             className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
             onChange={handleMentorChange}
+            disabled={mentorLocked} // ✅ lock dropdown
           >
             <option value="">Choose Mentor</option>
             <option value="orang1">Michael E. Gerber</option>
