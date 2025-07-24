@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import Logo from "../assets/logo/Logo-Dark.png";
+import Logo from "../assets/logo/Aivise-Logo.png";
 import chatData from "../data/chatData.json";
 import { supabase } from "../lib/supabaseClient";
 import users from "../assets/user/user.png";
+import michael from "../assets/advisor/michael.jpg";
+import eric from "../assets/advisor/eric.jpg";
+import covey from "../assets/advisor/covey.jpg";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState(chatData);
@@ -106,18 +109,26 @@ const Chatbot = () => {
     window.location.href = "/login"; // Redirect ke halaman login
   };
 
+  const [selectedMentor, setSelectedMentor] = useState("");
+
   const [isOpen, setIsOpen] = useState(false);
 
-  // ✅ Handler untuk dropdown
+  // Handler untuk dropdown
   const handleMentorChange = (e) => {
     const value = e.target.value;
 
     if (value === "orang1") {
       setMentorCode("EMYTH");
+      setSelectedMentor("Michael E. Gerber");
     } else if (value === "orang2") {
       setMentorCode("7HABITS");
+      setSelectedMentor("Stephen R. Covey");
     } else if (value === "orang3") {
       setMentorCode("LEAN");
+      setSelectedMentor("Eric Ries");
+    } else {
+      setMentorCode("");
+      setSelectedMentor("");
     }
   };
 
@@ -125,7 +136,7 @@ const Chatbot = () => {
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
       {/* Header */}
       <header className="h-[80px] bg-[#FFFFFF] flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
-        <img src={Logo} alt="logo-png" className="w-[150px]" />
+        <img src={Logo} alt="logo-png" className="w-[120px]" />
 
         {/* Profile + Dropdown */}
         <div className="relative">
@@ -163,12 +174,28 @@ const Chatbot = () => {
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
                 {msg.sender === "user" ? (
-                  <img src={users} className="w-7 h-7 rounded-[100%]" />
+                  <>
+                    <img src={users} className="w-7 h-7 rounded-full" />
+                    <p>User</p>
+                  </>
                 ) : (
-                  <img src={users} className="w-7 h-7 rounded-[100%]" />
+                  <>
+                    <img
+                      src={
+                        selectedMentor === "Michael E. Gerber"
+                          ? michael
+                          : selectedMentor === "Stephen R. Covey"
+                          ? covey
+                          : selectedMentor === "Eric Ries"
+                          ? eric
+                          : users // fallback jika belum pilih mentor
+                      }
+                      className="w-7 h-7 rounded-full object-cover"
+                    />
+                    {/* ✅ Tampilkan nama mentor jika ada */}
+                    <p>{selectedMentor || "AI Advisor"}</p>
+                  </>
                 )}
-
-                {msg.sender === "user" ? <p>User</p> : <p>AI Advisor</p>}
               </div>
 
               <p
