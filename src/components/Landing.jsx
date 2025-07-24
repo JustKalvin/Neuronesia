@@ -11,6 +11,8 @@ import video from "../assets/video/Untitled.mp4";
 import ParticlesComponent from "../components/Particles";
 import Faq from "../components/Faq";
 import teams from "../assets/teams.jpg";
+import { motion } from "framer-motion";
+
 
 import { supabase } from "../lib/supabaseClient";
 import Footer from "./Footer";
@@ -59,6 +61,8 @@ const Landing = () => {
             literature to offer practical, proven insights tailored to your
             needs.
           </p>
+          
+          
           <div className="flex gap-4 mb-10">
             <Link
               to={isLoggedIn ? "/chatbot" : "/login"}
