@@ -10,6 +10,7 @@ import user3 from "../assets/advisor/eric.jpg";
 import video from "../assets/video/Untitled.mp4";
 import ParticlesComponent from "../components/Particles";
 import Faq from "../components/Faq";
+import teams from "../assets/teams.jpg";
 
 import { supabase } from "../lib/supabaseClient";
 import Footer from "./Footer";
@@ -76,37 +77,57 @@ const Landing = () => {
             </a>
           </div>
         </div>
-          <div className="px-[50px] md:px-[200px] xl:mt-15 rounded">
-            <video autoPlay muted loop playsInline className="w-full h-auto rounded-[15px]">
-              <source src={video} type="video/mp4"/>
-            </video>
-          </div>
-
-
-          <div>
-            <h1 className="text-6xl font-bold text-center mb-5 mt-25 max-md:text-4xl max-lg:text-5xl">Meet your mentors!</h1>
-            <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-sm:px-5">Aivise is powered by the insights of experienced business mentors whose ideas are shared through widely respected books. Our AI learns from a carefully selected library of real-world business literature, covering topics such as leadership, strategy, innovation, and growth. This ensures that the guidance Aivise provides is rooted in proven principles from trusted experts across the business world.
-            </p>
-          </div>
+        <div className="px-[50px] md:px-[200px] xl:mt-15 rounded">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-auto rounded-[15px]"
+          >
+            <source src={video} type="video/mp4" />
+          </video>
         </div>
-        <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-10 max-sm:mb-5">
-          <Card 
-            image={user1}
-            name="Michael E. Gerber"
-            description="Known For Renowned small business consultant and author, described by Inc. Magazine as 'The World's #1 Small Business Guru.'"
-          />
-          <Card 
-            image={user2}
-            name="Stephen R. Covey"
-            description="Known For Global leadership thinker, bestselling author, and founder of Covey Leadership Center."
-          />
-          <Card 
-            image={user3}
-            name="Eric Ries"
-            description="Known For Creator of the Lean Startup methodology and advisor to technology startups."
-          />
+
+        <div>
+          <h1 className="text-6xl font-bold text-center mb-5 mt-25 max-md:text-4xl max-lg:text-5xl">
+            Meet your mentors!
+          </h1>
+          <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-sm:px-5">
+            Aivise is powered by the insights of experienced business mentors
+            whose ideas are shared through widely respected books. Our AI learns
+            from a carefully selected library of real-world business literature,
+            covering topics such as leadership, strategy, innovation, and
+            growth. This ensures that the guidance Aivise provides is rooted in
+            proven principles from trusted experts across the business world.
+          </p>
         </div>
+      </div>
+      <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-10 max-sm:mb-5">
+        <Card
+          image={user1}
+          name="Michael E. Gerber"
+          description="Known For Renowned small business consultant and author, described by Inc. Magazine as 'The World's #1 Small Business Guru.'"
+        />
+        <Card
+          image={user2}
+          name="Stephen R. Covey"
+          description="Known For Global leadership thinker, bestselling author, and founder of Covey Leadership Center."
+        />
+        <Card
+          image={user3}
+          name="Eric Ries"
+          description="Known For Creator of the Lean Startup methodology and advisor to technology startups."
+        />
+      </div>
       <Faq />
+
+      <h1 className="text-6xl font-bold m-10 text-center font-Montserrat">
+        Our Teams
+      </h1>
+      <div className="flex flex-col justify-center items-center mb-30">
+        <img src={teams} alt="" className="w-[500px] rounded-xl" />
+      </div>
       <Footer />
     </div>
   );
