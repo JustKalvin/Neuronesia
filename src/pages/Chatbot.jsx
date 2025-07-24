@@ -8,6 +8,9 @@ import michael from "../assets/advisor/michael.jpg";
 import eric from "../assets/advisor/eric.jpg";
 import covey from "../assets/advisor/covey.jpg";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState(chatData);
@@ -137,7 +140,9 @@ const Chatbot = () => {
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
       {/* Header */}
       <header className="h-[80px] bg-[#FFFFFF] flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
-        <Link to="/"><img src={Logo} alt="logo-png" className="w-[120px]" /></Link>
+        <Link to="/">
+          <img src={Logo} alt="logo-png" className="w-[120px]" />
+        </Link>
 
         {/* Profile + Dropdown */}
         <div className="relative">
@@ -199,15 +204,15 @@ const Chatbot = () => {
                 )}
               </div>
 
-              <p
+              <div
                 className={`rounded-lg px-5 py-3 max-w-md ${
                   msg.sender === "user"
-                    ? "bg-black text-right text-white"
+                    ? "bg-black text-left text-white"
                     : "bg-white text-left border-1"
                 }`}
               >
-                {msg.message}
-              </p>
+                <ReactMarkdown>{msg.message}</ReactMarkdown>
+              </div>
             </div>
           </div>
         ))}
