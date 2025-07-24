@@ -122,11 +122,11 @@ const Landing = () => {
       </div>
       <Faq />
 
-      <h1 className="text-6xl font-bold m-10 text-center font-Montserrat">
+      <h1 className="text-6xl font-bold m-10 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
         Our Teams
       </h1>
       <div className="flex flex-col justify-center items-center mb-30">
-        <img src={teams} alt="" className="w-[500px] rounded-xl" />
+        <img src={teams} alt="" className="grayscale w-[500px] rounded-xl max-sm:w-[300px]" />
       </div>
       <Footer />
     </div>
