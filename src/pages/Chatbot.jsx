@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Logo from "../assets/logo/Logo-Dark.png";
+// import Logo from "../assets/logo/Logo-Dark.png";
 import chatData from "../data/chatData.json";
 import { supabase } from "../lib/supabaseClient";
 import users from "../assets/user/user.png";
