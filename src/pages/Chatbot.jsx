@@ -17,6 +17,7 @@ const Chatbot = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [analyticClicked, setAnalyticClicked] = useState(false);
 
   // ✅ State untuk namespace Pinecone
   const [mentorCode, setMentorCode] = useState("");
@@ -136,6 +137,10 @@ const Chatbot = () => {
     }
   };
 
+  const handleAnalytic = () => {
+    setAnalyticClicked(analyticClicked => (!analyticClicked))
+  }
+
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
       {/* Header */}
@@ -173,9 +178,8 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+              }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -191,10 +195,10 @@ const Chatbot = () => {
                         selectedMentor === "Michael E. Gerber"
                           ? michael
                           : selectedMentor === "Stephen R. Covey"
-                          ? covey
-                          : selectedMentor === "Eric Ries"
-                          ? eric
-                          : users // fallback jika belum pilih mentor
+                            ? covey
+                            : selectedMentor === "Eric Ries"
+                              ? eric
+                              : users // fallback jika belum pilih mentor
                       }
                       className="w-7 h-7 rounded-full object-cover"
                     />
@@ -205,11 +209,10 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${
-                  msg.sender === "user"
-                    ? "bg-black text-left text-white"
-                    : "bg-white text-left border-1"
-                }`}
+                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
+                  ? "bg-black text-left text-white"
+                  : "bg-white text-left border-1"
+                  }`}
               >
                 <ReactMarkdown>{msg.message}</ReactMarkdown>
               </div>
@@ -225,27 +228,51 @@ const Chatbot = () => {
       <hr className="" />
 
       {/* Footer Input */}
-      <footer className="px-[200px] py-8 max-lg:px-[100px] max-sm:px-[40px] ">
-        <div className="flex items-center gap-3">
-          <input
-            type="text"
-            placeholder="Ask AI..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            className="text-black flex-1 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
-          <button
-            type="button"
-            onClick={handleSend}
-            className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
-          >
-            Send
-          </button>
-        </div>
+      <footer className="px-[200px] py-8 max-lg:px-[100px] max-sm:px-[40px]">
+        {/* Kondisional: jika analytic aktif, tampilkan upload file */}
+        {analyticClicked ? (
+          <div className="flex items-center gap-3">
+            <input
+              type="file"
+              accept=".csv,.xlsx,.xls,.json,.txt"
+              className="border border-gray-400 rounded-lg px-4 py-2"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  console.log("Selected file:", file);
+                  // Tambahkan logic upload atau parsing file di sini
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
+            >
+              Upload
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <input
+              type="text"
+              placeholder="Ask AI..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              className="text-black flex-1 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <button
+              type="button"
+              onClick={handleSend}
+              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
+            >
+              Send
+            </button>
+          </div>
+        )}
 
-        {/* Dropdown Mentor */}
-        <div className="mt-2">
+        {/* Mentor dropdown + Analytics toggle */}
+        <div className="mt-4 flex items-center gap-3">
           <select
             className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
             onChange={handleMentorChange}
@@ -255,13 +282,19 @@ const Chatbot = () => {
             <option value="orang2">Stephen R. Covey</option>
             <option value="orang3">Eric Ries</option>
           </select>
-        </div>
 
-        {/* ✅ Debug: tampilkan namespace yang dipilih
-        <p className="mt-2 text-gray-600">
-          Selected Namespace: <strong>{mentorCode || "None"}</strong>
-        </p> */}
+          <button
+            onClick={handleAnalytic}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked
+              ? "bg-black text-white"
+              : "bg-white text-black"
+              }`}
+          >
+            Analytics
+          </button>
+        </div>
       </footer>
+
     </div>
   );
 };

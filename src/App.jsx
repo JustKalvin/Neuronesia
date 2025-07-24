@@ -6,7 +6,6 @@ import { Routes, Route } from "react-router-dom";
 import Landing from './components/Landing'
 import Chatbot from './pages/Chatbot';
 import Login from './pages/login';
-import CSVReader from "./pages/testingKal"
 
 function App() {
   return (
@@ -14,7 +13,6 @@ function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/chatbot" element={<Chatbot />} />
-      <Route path="/csvreader" element={<CSVReader />} />
     </Routes>
   )
 }
