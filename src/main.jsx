@@ -1,14 +1,11 @@
-// src/App.jsx
-import { Routes, Route } from "react-router-dom"
-import Login from "./pages/Login"
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import "./style/style.css";
 
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<h1>Home Page</h1>} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
-  )
-}
-
-export default App
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
