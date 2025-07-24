@@ -94,6 +94,8 @@ const Landing = () => {
               See Documentation
             </a>
           </div>
+          
+          
         </div>
         <div className="px-[50px] md:px-[200px] xl:mt-15 rounded">
           <video
@@ -122,28 +124,22 @@ const Landing = () => {
         </div>
       </div>
       <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-10 max-sm:mb-5">
-        {[user1, user2, user3].map((img, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 1 + index * 0.3 }}
-          >
-            <Card
-              image={img}
-              name={
-                index === 0
-                  ? "Michael E. Gerber"
-                  : index === 1
-                  ? "Stephen R. Covey"
-                  : "Eric Ries"
-              }
-              description="Known For ..."
-            />
-          </motion.div>
-        ))}
+        <Card
+          image={user1}
+          name="Michael E. Gerber"
+          description="Known For Renowned small business consultant and author, described by Inc. Magazine as 'The World's #1 Small Business Guru.'"
+        />
+        <Card
+          image={user2}
+          name="Stephen R. Covey"
+          description="Known For Global leadership thinker, bestselling author, and founder of Covey Leadership Center."
+        />
+        <Card
+          image={user3}
+          name="Eric Ries"
+          description="Known For Creator of the Lean Startup methodology and advisor to technology startups."
+        />
       </div>
-
       <Faq />
 
       <h1 className="text-6xl font-bold m-10 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
