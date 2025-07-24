@@ -17,6 +17,8 @@ import { motion } from "framer-motion";
 import { supabase } from "../lib/supabaseClient";
 import Footer from "./Footer";
 
+const MotionLink = motion(Link);
+
 const Landing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -48,38 +50,50 @@ const Landing = () => {
       <hr />
       <div className="flex flex-col items-center justify-center mt-25 md:mt-40">
         <div className="items-center flex flex-col mb-32 xl:mb-0 md:mb-10 max-md:mb-5 max-sm:mb-5">
-          <h1 className="text-6xl font-bold mb-4 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
+          <motion.h1 className="text-6xl font-bold mb-4 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}>
             Meet Aivise!
-          </h1>
-          <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5 max-sm:px-5">
+          </motion.h1>
+          <motion.h3 className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5 max-sm:px-5"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}>
             Your Intelligent Business Mentor
-          </h3>
-          <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-md:px-5 max-sm:px-5">
+          </motion.h3>
+          <motion.p className="text-md mb-6 text-center max-w-2xl font-Poppins max-md:px-5 max-sm:px-5"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.4 }}>
             Aivise is an AI mentor built to help business owners by providing
             advice grounded in real books from expert authors. Instead of giving
             generic answers, Aivise learns directly from trusted business
             literature to offer practical, proven insights tailored to your
             needs.
-          </p>
+          </motion.p>
           
           
-          <div className="flex gap-4 mb-10">
-            <Link
+          <motion.div className="flex gap-4 mb-10">
+            <MotionLink
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300 }}
               to={isLoggedIn ? "/chatbot" : "/login"}
               className="px-6 py-2 bg-black text-white rounded-lg hover:bg-zinc-100 hover:text-black transition"
             >
               Get Started
-            </Link>
+            </MotionLink>
 
-            <a
+            <motion.a
               href="/docs" // or your actual documentation route
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-2 border border-black text-black rounded-lg hover:bg-blue-100 transition"
             >
               See Documentation
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
         </div>
         <div className="px-[50px] md:px-[200px] xl:mt-15 rounded">
           <video
