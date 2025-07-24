@@ -3,7 +3,7 @@ import "../style/style.css";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import Card from "./Card";
-
+import users from '../assets/user/user.png'
 import { supabase } from "../lib/supabaseClient";
 
 const Landing = () => {

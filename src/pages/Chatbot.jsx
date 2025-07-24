@@ -7,6 +7,7 @@ import users from "../assets/user/user.png";
 import michael from "../assets/advisor/michael.jpg";
 import eric from "../assets/advisor/eric.jpg";
 import covey from "../assets/advisor/covey.jpg";
+import { Link } from "react-router-dom";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState(chatData);
@@ -136,7 +137,7 @@ const Chatbot = () => {
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
       {/* Header */}
       <header className="h-[80px] bg-[#FFFFFF] flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
-        <img src={Logo} alt="logo-png" className="w-[120px]" />
+        <Link to="/"><img src={Logo} alt="logo-png" className="w-[120px]" /></Link>
 
         {/* Profile + Dropdown */}
         <div className="relative">
