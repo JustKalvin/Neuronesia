@@ -13,9 +13,11 @@ const Landing = () => {
     });
 
     // Dengarkan perubahan status auth (login/logout)
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoggedIn(!!session?.user);
-    });
+    const { data: subscription } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setIsLoggedIn(!!session?.user);
+      }
+    );
 
     return () => {
       subscription.subscription.unsubscribe();
@@ -23,16 +25,9 @@ const Landing = () => {
   }, []);
 
   return (
-<<<<<<< Updated upstream
-    <div className="bg-lightGreen flex flex-col h-[100vh] justify-center items-center">
-      <h1 className="font-Montserrat font-bold text-[25px]">ADVISOR</h1>
-=======
     <div className="bg-[#DEE4E2] flex flex-col h-[100vh] justify-center items-center">
       <h1 className="font-bold text-[25px] font-poppins">ADVISOR</h1>
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
       <p className="w-[300px] text-center">Personalized Business Advisor</p>
 
       <Link
