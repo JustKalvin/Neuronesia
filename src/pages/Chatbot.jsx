@@ -1,12 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Logo from "../assets/logo/Logo-Dark.png";
 import chatData from "../data/chatData.json";
+import { supabase } from "../lib/supabaseClient";
+import users from "../assets/user/user.png";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState(chatData);
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false); // optional: indikator loading
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // ✅ State untuk namespace Pinecone
+  const [mentorCode, setMentorCode] = useState("");
+
+  const insertUser = async (id, full_name, email, avatar_url, created_at) => {
+    try {
+      const { data, error } = await supabase.from("users").insert([
+        {
+          id,
+          full_name,
+          email,
+          avatar_url,
+          created_at,
+        },
+      ]);
+
+      if (error) {
+        return { success: false, message: error.message };
+      }
+      return { success: true, data };
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  };
 
   const handleSend = async () => {
     if (input.trim() === "") return;
@@ -17,17 +44,17 @@ const Chatbot = () => {
       message: input,
     };
 
-    // Tambahkan pesan user ke state
     setMessages((prev) => [...prev, newMessage]);
     setInput("");
     setLoading(true);
 
     try {
-      // ✅ POST ke API endpoint
+      // ✅ Kirim ke API dengan tambahan namespace
       const response = await axios.post(
         "https://primary-production-9ee5.up.railway.app/webhook/bookrag",
         {
           message: input,
+          namespace: mentorCode, // ✅ kirim namespace ke API
         },
         {
           headers: {
@@ -36,14 +63,13 @@ const Chatbot = () => {
         }
       );
       console.log(response);
-      // Ambil jawaban bot dari response API
+
       const botReply = {
         id: messages.length + 2,
         sender: "bot",
         message: response.data.output.response || "No response from server",
       };
 
-      // Update messages
       setMessages((prev) => [...prev, botReply]);
     } catch (error) {
       console.error("API Error:", error);
@@ -58,15 +84,75 @@ const Chatbot = () => {
     }
   };
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user || null);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    window.location.href = "/login"; // Redirect ke halaman login
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  // ✅ Handler untuk dropdown
+  const handleMentorChange = (e) => {
+    const value = e.target.value;
+
+    if (value === "orang1") {
+      setMentorCode("EMYTH");
+    } else if (value === "orang2") {
+      setMentorCode("7HABITS");
+    } else if (value === "orang3") {
+      setMentorCode("LEAN");
+    }
+  };
+
   return (
-    <div className="bg-[#5B5B60] h-screen flex flex-col justify-between ">
+    <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
       {/* Header */}
-      <header className="h-[70px] bg-[#5B5B60] flex items-center px-5">
+      <header className="h-[80px] bg-[#FFFFFF] flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
         <img src={Logo} alt="logo-png" className="w-[150px]" />
+
+        {/* Profile + Dropdown */}
+        <div className="relative">
+          <img
+            src={users}
+            alt="profile-png"
+            className="w-[45px] h-[45px] rounded-full border cursor-pointer"
+            onClick={() => setIsOpen((prev) => !prev)}
+          />
+
+          {isOpen && (
+            <div className="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg">
+              <button
+                className="block w-full text-left px-4 py-2 hover:bg-black hover:text-white hover:rounded-lg cursor-pointer"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
+      <hr className="" />
+
       {/* Main Chat Area */}
-      <main className="flex-1 overflow-y-auto px-[200px] py-6 space-y-6">
+      <main className="flex-1 overflow-y-auto px-[200px] py-8 space-y-6 max-lg:px-[100px] max-sm:px-[40px]">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -74,43 +160,74 @@ const Chatbot = () => {
               msg.sender === "user" ? "justify-end" : "justify-start"
             }`}
           >
-            <p
-              className={`rounded-lg px-5 py-3 max-w-md ${
-                msg.sender === "user"
-                  ? "bg-red-200 text-right"
-                  : "bg-blue-200 text-left"
-              }`}
-            >
-              {msg.message}
-            </p>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-3 items-center">
+                {msg.sender === "user" ? (
+                  <img src={users} className="w-7 h-7 rounded-[100%]" />
+                ) : (
+                  <img src={users} className="w-7 h-7 rounded-[100%]" />
+                )}
+
+                {msg.sender === "user" ? <p>User</p> : <p>AI Advisor</p>}
+              </div>
+
+              <p
+                className={`rounded-lg px-5 py-3 max-w-md ${
+                  msg.sender === "user"
+                    ? "bg-black text-right text-white"
+                    : "bg-white text-left border-1"
+                }`}
+              >
+                {msg.message}
+              </p>
+            </div>
           </div>
         ))}
 
-        {/* Optional: Loading Indicator */}
         {loading && (
-          <p className="text-gray-500 text-center italic">Bot is typing...</p>
+          <p className="text-gray-500 text-center italic">AI is typing...</p>
         )}
       </main>
 
+      <hr className="" />
+
       {/* Footer Input */}
-      <footer className="px-[200px] py-4">
+      <footer className="px-[200px] py-8 max-lg:px-[100px] max-sm:px-[40px] ">
         <div className="flex items-center gap-3">
           <input
             type="text"
-            placeholder="Type a message..."
+            placeholder="Ask AI..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            className="flex-1 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="text-black flex-1 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <button
             type="button"
             onClick={handleSend}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+            className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
           >
             Send
           </button>
         </div>
+
+        {/* Dropdown Mentor */}
+        <div className="mt-2">
+          <select
+            className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
+            onChange={handleMentorChange}
+          >
+            <option value="">Choose Mentor</option>
+            <option value="orang1">Michael E. Gerber</option>
+            <option value="orang2">Stephen R. Covey</option>
+            <option value="orang3">Eric Ries</option>
+          </select>
+        </div>
+
+        {/* ✅ Debug: tampilkan namespace yang dipilih
+        <p className="mt-2 text-gray-600">
+          Selected Namespace: <strong>{mentorCode || "None"}</strong>
+        </p> */}
       </footer>
     </div>
   );
