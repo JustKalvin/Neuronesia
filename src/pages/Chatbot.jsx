@@ -18,6 +18,7 @@ const Chatbot = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [analyticClicked, setAnalyticClicked] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
 
   // ✅ State untuk namespace Pinecone
   const [mentorCode, setMentorCode] = useState("");
@@ -43,8 +44,15 @@ const Chatbot = () => {
     }
   };
 
+  const [mentorLocked, setMentorLocked] = useState(false);
+
   const handleSend = async () => {
     if (input.trim() === "") return;
+
+    // 🔒 Lock mentor selection after first message
+    if (!mentorLocked) {
+      setMentorLocked(true);
+    }
 
     const newMessage = {
       id: messages.length + 1,
@@ -57,12 +65,11 @@ const Chatbot = () => {
     setLoading(true);
 
     try {
-      // ✅ Kirim ke API dengan tambahan namespace
       const response = await axios.post(
         "https://primary-production-9ee5.up.railway.app/webhook/bookrag",
         {
           message: input,
-          namespace: mentorCode, // ✅ kirim namespace ke API
+          namespace: mentorCode,
         },
         {
           headers: {
@@ -70,7 +77,6 @@ const Chatbot = () => {
           },
         }
       );
-      console.log(response);
 
       const botReply = {
         id: messages.length + 2,
@@ -138,8 +144,66 @@ const Chatbot = () => {
   };
 
   const handleAnalytic = () => {
-    setAnalyticClicked(analyticClicked => (!analyticClicked))
-  }
+    setAnalyticClicked((analyticClicked) => !analyticClicked);
+  };
+
+  const [uploading, setUploading] = useState(false);
+
+  const handleUploadFile = async () => {
+    if (!uploadedFile) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    setUploading(true); // ✅ mulai loading
+    const formData = new FormData();
+    formData.append("file", uploadedFile);
+
+    try {
+      const response = await axios.post(
+        "https://primary-production-9ee5.up.railway.app/webhook/analytic",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const responseData = response.data;
+
+      const insight = responseData.insight;
+      const imageUrl = responseData.url;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          sender: "bot",
+          message: imageUrl,
+          type: "image",
+        },
+        {
+          id: prev.length + 2,
+          sender: "bot",
+          message: insight,
+          type: "text",
+        },
+      ]);
+    } catch (error) {
+      console.error("Upload error:", error);
+
+      const errorReply = {
+        id: messages.length + 1,
+        sender: "bot",
+        message: "Upload failed or response unreadable. Please try again.",
+      };
+
+      setMessages((prev) => [...prev, errorReply]);
+    } finally {
+      setUploading(false); // ✅ selesai loading
+    }
+  };
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
@@ -152,7 +216,7 @@ const Chatbot = () => {
         {/* Profile + Dropdown */}
         <div className="relative">
           <img
-            src={users}
+            src={user?.user_metadata?.avatar_url}
             alt="profile-png"
             className="w-[45px] h-[45px] rounded-full border cursor-pointer"
             onClick={() => setIsOpen((prev) => !prev)}
@@ -185,8 +249,8 @@ const Chatbot = () => {
               <div className="flex gap-3 items-center">
                 {msg.sender === "user" ? (
                   <>
-                    <img src={users} className="w-7 h-7 rounded-full" />
-                    <p>User</p>
+                    <img src={user?.user_metadata?.avatar_url || users} className="w-7 h-7 rounded-full" />
+                    <p>{user?.user_metadata?.full_name || "You"}</p>
                   </>
                 ) : (
                   <>
@@ -210,11 +274,19 @@ const Chatbot = () => {
 
               <div
                 className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
-                  ? "bg-black text-left text-white"
-                  : "bg-white text-left border-1"
+                    ? "bg-black text-left text-white"
+                    : "bg-white text-left border-1"
                   }`}
               >
-                <ReactMarkdown>{msg.message}</ReactMarkdown>
+                {msg.type === "image" ? (
+                  <img
+                    src={msg.message}
+                    alt="Chart"
+                    style={{ maxWidth: "100%" }}
+                  />
+                ) : (
+                  <ReactMarkdown>{msg.message}</ReactMarkdown>
+                )}
               </div>
             </div>
           </div>
@@ -234,21 +306,28 @@ const Chatbot = () => {
           <div className="flex items-center gap-3">
             <input
               type="file"
-              accept=".csv,.xlsx,.xls,.json,.txt"
+              accept=".csv"
               className="border border-gray-400 rounded-lg px-4 py-2"
               onChange={(e) => {
                 const file = e.target.files[0];
                 if (file) {
-                  console.log("Selected file:", file);
-                  // Tambahkan logic upload atau parsing file di sini
+                  setUploadedFile(file);
                 }
               }}
+              disabled={uploading} // ✅ disable input saat upload
             />
+
             <button
+              onClick={() => handleUploadFile()}
               type="button"
-              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
+              disabled={uploading} // ✅ prevent double click
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-white hover:text-black"
+                }`}
             >
-              Upload
+              {uploading ? "Analyzing Data..." : "Upload"}{" "}
+              {/* ✅ indikator loading */}
             </button>
           </div>
         ) : (
@@ -276,6 +355,7 @@ const Chatbot = () => {
           <select
             className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
             onChange={handleMentorChange}
+            disabled={mentorLocked} // ✅ lock dropdown
           >
             <option value="">Choose Mentor</option>
             <option value="orang1">Michael E. Gerber</option>
@@ -285,16 +365,13 @@ const Chatbot = () => {
 
           <button
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked
-              ? "bg-black text-white"
-              : "bg-white text-black"
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
               }`}
           >
             Analytics
           </button>
         </div>
       </footer>
-
     </div>
   );
 };
