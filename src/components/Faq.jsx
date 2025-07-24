@@ -2,6 +2,7 @@ import React from "react";
 import "../style/style.css";
 import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Faq = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -40,35 +41,53 @@ const Faq = () => {
 
   return (
     <div className="px-10 sm:px-20 md:px-40 lg:px-60 xl:px-100 py-16 pb-20">
-      <h1 className="text-6xl font-bold mb-10 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
+      {/* Animasi Fade-in untuk judul */}
+      <motion.h1
+        className="text-6xl font-bold mb-10 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl"
+        initial={{ opacity: 0, y: -50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+      >
         FAQ
-      </h1>
+      </motion.h1>
 
       <div className="space-y-4 bg-white">
         {faqs.map((item, index) => (
-          <div
+          <motion.div
             key={index}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+            viewport={{ once: true }}
             className="border rounded-xl p-5 shadow-sm cursor-pointer"
             onClick={() => toggleFAQ(index)}
           >
             <div className="flex justify-between items-center">
               <h2 className="text-md font-semibold">{item.question}</h2>
-              <ChevronDownIcon
-                className={`w-6 h-6 transform transition-transform duration-300 ${
-                  openIndex === index ? "rotate-180" : ""
-                }`}
-              />
+              <motion.div
+                animate={{ rotate: openIndex === index ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDownIcon className="w-6 h-6" />
+              </motion.div>
             </div>
 
-            {/* Smooth Expand/Collapse */}
-            <div
-              className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                openIndex === index ? "max-h-40 mt-3" : "max-h-0"
-              }`}
-            >
-              <p className="text-gray-600">{item.answer}</p>
-            </div>
-          </div>
+            {/* Smooth Expand/Collapse + Fade */}
+            <AnimatePresence>
+              {openIndex === index && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="mt-3"
+                >
+                  <p className="text-gray-600">{item.answer}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         ))}
       </div>
     </div>
