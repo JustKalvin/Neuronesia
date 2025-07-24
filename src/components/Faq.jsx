@@ -44,7 +44,7 @@ const Faq = () => {
         FAQ
       </h1>
 
-      <div className="space-y-4">
+      <div className="space-y-4 bg-white">
         {faqs.map((item, index) => (
           <div
             key={index}
