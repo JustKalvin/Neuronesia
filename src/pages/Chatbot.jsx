@@ -242,14 +242,18 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
-              }`}
+            className={`flex ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
                 {msg.sender === "user" ? (
                   <>
-                    <img src={user?.user_metadata?.avatar_url || users} className="w-7 h-7 rounded-full" />
+                    <img
+                      src={user?.user_metadata?.avatar_url || users}
+                      className="w-7 h-7 rounded-full"
+                    />
                     <p>{user?.user_metadata?.full_name || "You"}</p>
                   </>
                 ) : (
@@ -259,10 +263,10 @@ const Chatbot = () => {
                         selectedMentor === "Michael E. Gerber"
                           ? michael
                           : selectedMentor === "Stephen R. Covey"
-                            ? covey
-                            : selectedMentor === "Eric Ries"
-                              ? eric
-                              : users // fallback jika belum pilih mentor
+                          ? covey
+                          : selectedMentor === "Eric Ries"
+                          ? eric
+                          : users // fallback jika belum pilih mentor
                       }
                       className="w-7 h-7 rounded-full object-cover"
                     />
@@ -273,10 +277,11 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
+                className={`rounded-lg px-5 py-3 max-w-md ${
+                  msg.sender === "user"
                     ? "bg-black text-left text-white"
                     : "bg-white text-left border-1"
-                  }`}
+                }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -304,27 +309,37 @@ const Chatbot = () => {
         {/* Kondisional: jika analytic aktif, tampilkan upload file */}
         {analyticClicked ? (
           <div className="flex items-center gap-3">
+            <label
+              htmlFor="file-upload"
+              className="bg-white text-black px-4 py-2 rounded-lg cursor-pointer hover:bg-white hover:text-black border"
+            >
+              Choose File
+            </label>
             <input
+              id="file-upload"
               type="file"
               accept=".csv"
-              className="border border-gray-400 rounded-lg px-4 py-2"
+              className="hidden"
               onChange={(e) => {
                 const file = e.target.files[0];
                 if (file) {
                   setUploadedFile(file);
                 }
               }}
-              disabled={uploading} // ✅ disable input saat upload
             />
+            {uploadedFile && (
+              <span className="text-gray-600">{uploadedFile.name}</span>
+            )}
 
             <button
               onClick={() => handleUploadFile()}
               type="button"
               disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                uploading
                   ? "bg-gray-400 text-white cursor-not-allowed"
                   : "bg-black text-white hover:bg-white hover:text-black"
-                }`}
+              }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
@@ -365,8 +380,9 @@ const Chatbot = () => {
 
           <button
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              analyticClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             Analytics
           </button>
