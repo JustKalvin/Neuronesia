@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import axios from "axios";
 import Logo from "../assets/logo/Logo-Dark.png";
 import chatData from "../data/chatData.json";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState(chatData);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false); // optional: indikator loading
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim() === "") return;
 
     const newMessage = {
@@ -15,24 +17,51 @@ const Chatbot = () => {
       message: input,
     };
 
-    setMessages([...messages, newMessage]);
+    // Tambahkan pesan user ke state
+    setMessages((prev) => [...prev, newMessage]);
     setInput("");
+    setLoading(true);
 
-    // Simulasi respon bot (dummy)
-    setTimeout(() => {
+    try {
+      // ✅ POST ke API endpoint
+      const response = await axios.post(
+        "https://primary-production-9ee5.up.railway.app/webhook/bookrag",
+        {
+          message: input,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      // Ambil jawaban bot dari response API
       const botReply = {
         id: messages.length + 2,
         sender: "bot",
-        message: "This is a dummy response from the bot.",
+        message: response.data.output.response || "No response from server",
       };
+
+      // Update messages
       setMessages((prev) => [...prev, botReply]);
-    }, 1000);
+    } catch (error) {
+      console.error("API Error:", error);
+      const errorReply = {
+        id: messages.length + 2,
+        sender: "bot",
+        message: "Error fetching response. Please try again.",
+      };
+      setMessages((prev) => [...prev, errorReply]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="h-screen flex flex-col justify-between">
+    <div className="bg-[#5B5B60] h-screen flex flex-col justify-between ">
       {/* Header */}
-      <header className="h-[70px] bg-red-100 flex items-center px-5">
+      <header className="h-[70px] bg-[#5B5B60] flex items-center px-5">
         <img src={Logo} alt="logo-png" className="w-[150px]" />
       </header>
 
@@ -56,6 +85,11 @@ const Chatbot = () => {
             </p>
           </div>
         ))}
+
+        {/* Optional: Loading Indicator */}
+        {loading && (
+          <p className="text-gray-500 text-center italic">Bot is typing...</p>
+        )}
       </main>
 
       {/* Footer Input */}
