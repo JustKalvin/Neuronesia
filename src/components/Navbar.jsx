@@ -1,8 +1,9 @@
 import React from 'react'
+import '../style/style.css'
 
 const Navbar = () => {
   return (
-    <div>
+    <div className='bg-red-100 text-black'>
         Jojo
     </div>
   )
