@@ -23,8 +23,8 @@ const Landing = () => {
   }, []);
 
   return (
-    <div className="bg-[#DEE4E2] flex flex-col h-[100vh] justify-center items-center">
-      <h1 className="font-bold text-[25px]">ADVISOR</h1>
+    <div className="bg-lightGreen flex flex-col h-[100vh] justify-center items-center">
+      <h1 className="font-Montserrat font-bold text-[25px]">ADVISOR</h1>
       <p className="w-[300px] text-center">Personalized Business Advisor</p>
 
       <Link

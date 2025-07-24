@@ -1,1 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import "tailwindcss";
+
+@theme {
+    --color-gray : #5b5a60;
+    --color-lightGreen: #dee4e2;
+    --color-midGreen : #AFC7BA;
+    --color-darkGreen : #739A88;
+    --font-Montserrat : Montserrat, 'sans-serif';
+    --font-Roboto : Roboto, 'sans-serif';
+}
