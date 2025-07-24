@@ -7,7 +7,7 @@ import users from "../assets/user/user.png";
 import user1 from "../assets/advisor/michael.jpg";
 import user2 from "../assets/advisor/covey.jpg";
 import user3 from "../assets/advisor/eric.jpg";
-import screenshot from "../assets/graphic/Screenshot.png";
+import video from "../assets/video/Untitled.mp4";
 import ParticlesComponent from "../components/Particles";
 import Faq from "../components/Faq";
 
@@ -76,11 +76,43 @@ const Landing = () => {
             </a>
           </div>
         </div>
+<<<<<<< Updated upstream
         <div>
           <img
             src={screenshot}
             alt=""
             className="px-[50px] md:px-[150px] xl:px-[200px] sm:mt-0 md:mt-0 lg:mt-0 xl:mt-20"
+=======
+          <div className="px-[50px] md:px-[200px] mt-0 rounded">
+            <video autoPlay muted loop playsInline className="w-full h-auto rounded-[15px]">
+              <source src={video} type="video/mp4"/>
+            </video>
+            {/* <img src={screenshot} alt="" className="px-[50px] md:px-[200px] mt-0"/> */}
+          </div>
+
+
+          <div>
+            <h1 className="text-6xl font-bold text-center mb-5">Meet your mentors!</h1>
+            <p className="text-md mb-6 text-center max-w-2xl font-Poppins">Aivise is powered by the insights of experienced business mentors whose ideas are shared through widely respected books. Our AI learns from a carefully selected library of real-world business literature, covering topics such as leadership, strategy, innovation, and growth. This ensures that the guidance Aivise provides is rooted in proven principles from trusted experts across the business world.
+            </p>
+          </div>
+        </div>
+        <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-20">
+          <Card 
+            image={user1}
+            name="Michael E. Gerber"
+            description="Known For Renowned small business consultant and author, described by Inc. Magazine as 'The World's #1 Small Business Guru.'"
+          />
+          <Card 
+            image={user2}
+            name="Stephen R. Covey"
+            description="Known For Global leadership thinker, bestselling author, and founder of Covey Leadership Center."
+          />
+          <Card 
+            image={user3}
+            name="Eric Ries"
+            description="Known For Creator of the Lean Startup methodology and advisor to technology startups."
+>>>>>>> Stashed changes
           />
         </div>
 
