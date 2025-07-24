@@ -47,7 +47,7 @@ const Landing = () => {
       <Navbar />
       <hr />
       <div className="flex flex-col items-center justify-center mt-25 md:mt-40">
-        <div className="h-[50vh] items-center flex flex-col mb-20 md:mb-0">
+        <div className="h-[50vh] items-center flex flex-col mb-32 md:mb-0">
           <h1 className="text-6xl font-bold mb-4 text-center font-Montserrat">Meet Aivise!</h1>
           <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat">Your Intelligent Business Mentor</h3>
           <p className="text-md mb-6 text-center max-w-2xl font-Poppins">
@@ -72,7 +72,7 @@ const Landing = () => {
           </div>
         </div>
           <div>
-            <img src={screenshot} alt="" className="max-w-4xl mb-35"/>
+            <img src={screenshot} alt="" className="px-[50px] md:px-[200px] mt-0"/>
           </div>
 
 
