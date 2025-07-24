@@ -244,8 +244,8 @@ const Chatbot = () => {
               <div className="flex gap-3 items-center">
                 {msg.sender === "user" ? (
                   <>
-                    <img src={users} className="w-7 h-7 rounded-full" />
-                    <p>User</p>
+                    <img src={user?.user_metadata?.avatar_url || users} className="w-7 h-7 rounded-full" />
+                    <p>{user?.user_metadata?.full_name || "You"}</p>
                   </>
                 ) : (
                   <>
