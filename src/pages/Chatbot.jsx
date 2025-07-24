@@ -18,6 +18,8 @@ const Chatbot = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [analyticClicked, setAnalyticClicked] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState(null);
+
 
   // ✅ State untuk namespace Pinecone
   const [mentorCode, setMentorCode] = useState("");
@@ -141,6 +143,63 @@ const Chatbot = () => {
     setAnalyticClicked(analyticClicked => (!analyticClicked))
   }
 
+  const handleUploadFile = async () => {
+    if (!uploadedFile) {
+      alert("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", uploadedFile);
+
+    try {
+      const response = await axios.post(
+        "https://primary-production-9ee5.up.railway.app/webhook-test/analytic",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const responseData = response.data;
+
+      const insight = responseData.insight;
+      const imageUrl = responseData.url;
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          sender: "bot",
+          message: imageUrl,
+          type: "image"
+        },
+        {
+          id: prev.length + 2,
+          sender: "bot",
+          message: insight,
+          type: "text"
+        }
+      ]);
+
+
+    } catch (error) {
+      console.error("Upload error:", error);
+
+      const errorReply = {
+        id: messages.length + 1,
+        sender: "bot",
+        message: "Upload failed or response unreadable. Please try again.",
+      };
+
+      setMessages((prev) => [...prev, errorReply]);
+    }
+  };
+
+
+
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
       {/* Header */}
@@ -214,7 +273,12 @@ const Chatbot = () => {
                   : "bg-white text-left border-1"
                   }`}
               >
-                <ReactMarkdown>{msg.message}</ReactMarkdown>
+                {msg.type === "image" ? (
+                  <img src={msg.message} alt="Chart" style={{ maxWidth: "100%" }} />
+                ) : (
+                  <ReactMarkdown>{msg.message}</ReactMarkdown>
+                )}
+
               </div>
             </div>
           </div>
@@ -234,17 +298,18 @@ const Chatbot = () => {
           <div className="flex items-center gap-3">
             <input
               type="file"
-              accept=".csv,.xlsx,.xls,.json,.txt"
+              accept=".csv"
               className="border border-gray-400 rounded-lg px-4 py-2"
               onChange={(e) => {
                 const file = e.target.files[0];
                 if (file) {
-                  console.log("Selected file:", file);
-                  // Tambahkan logic upload atau parsing file di sini
+                  setUploadedFile(file);
                 }
               }}
             />
+
             <button
+              onClick={() => handleUploadFile()}
               type="button"
               className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
             >
