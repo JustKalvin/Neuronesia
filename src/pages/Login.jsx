@@ -1,8 +1,47 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { getUsers, getUsersById, insertUser, updateUser, deleteUser } from "../query"
 
 function Login() {
   const [user, setUser] = useState(null)
+  const [theUsers, setTheUsers] = useState([])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const result = await getUsers();
+      console.log(result);
+
+      if (result.success && result.data) {
+        setTheUsers(result.data);
+      } else {
+        console.error(result.message);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    const insertCurrentUser = async () => {
+      if (!user) return;
+
+      const { id, email, user_metadata } = user;
+      const full_name = user_metadata.full_name;
+      const avatar_url = user_metadata.avatar_url;
+      const created_at = new Date().toISOString();
+
+      const result = await insertUser(id, full_name, email, avatar_url, created_at);
+
+      if (!result.success) {
+        console.error("Insert user failed:", result.message);
+      } else {
+        console.log("User inserted successfully");
+      }
+    };
+
+    insertCurrentUser();
+  }, [user]);
+
 
   useEffect(() => {
     // Ambil user saat komponen pertama kali dirender
@@ -36,7 +75,15 @@ function Login() {
   return (
     <div style={{ textAlign: 'center', marginTop: '2rem' }}>
       <h1>Google Auth with Supabase</h1>
-
+      {theUsers && (
+        theUsers.map((item, idx) => {
+          return (
+            <div>
+              {item.full_name}
+            </div>
+          )
+        })
+      )}
       {user ? (
         <>
           <img
