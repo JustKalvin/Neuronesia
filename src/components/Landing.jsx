@@ -39,7 +39,7 @@ const Landing = () => {
           </p>
           <div className="flex gap-4 mb-10">
             <Link
-              to={isLoggedIn ? "/dashboard" : "/login"}
+              to={isLoggedIn ? "/chatbot" : "/login"}
               className="px-6 py-2 bg-black text-white rounded-lg hover:bg-zinc-200 hover:text-black transition"
             >
               Get Started
