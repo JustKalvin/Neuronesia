@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../style/style.css";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";       
 import Navbar from "./Navbar";
 import Card from "./Card";
 import users from "../assets/user/user.png";
