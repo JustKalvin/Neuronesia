@@ -13,7 +13,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const Chatbot = () => {
-  const [messages, setMessages] = useState(chatData);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
@@ -274,8 +274,8 @@ const Chatbot = () => {
 
               <div
                 className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
-                    ? "bg-black text-left text-white"
-                    : "bg-white text-left border-1"
+                  ? "bg-black text-left text-white"
+                  : "bg-white text-left border-1"
                   }`}
               >
                 {msg.type === "image" ? (
@@ -322,8 +322,8 @@ const Chatbot = () => {
               type="button"
               disabled={uploading} // ✅ prevent double click
               className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
-                  ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "bg-black text-white hover:bg-white hover:text-black"
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-black text-white hover:bg-white hover:text-black"
                 }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
