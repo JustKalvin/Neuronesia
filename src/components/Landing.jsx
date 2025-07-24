@@ -129,7 +129,7 @@ const Landing = () => {
       <h1 className="text-6xl font-bold m-10 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
         Our Team
       </h1>
-      <div className="relative group w-[600px] h-[500px] rounded-xl overflow-hidden mx-auto mb-30">
+      <div className="relative group w-[600px] h-[500px] rounded-xl overflow-hidden mx-auto mb-30 max-md:w-[450px] max-sm:w-[350px] max-sm:h-[300px]">
         <div className="transition duration-300 group-hover:blur-sm">
           <img src={teams} alt="" className="grayscale w-full h-auto rounded-xl" />
         </div>

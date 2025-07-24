@@ -40,7 +40,7 @@ const Faq = () => {
 
   return (
     <div className="px-10 sm:px-20 md:px-40 lg:px-60 xl:px-100 py-16 pb-20">
-      <h1 className="text-6xl font-bold mb-10 text-center font-Montserrat">
+      <h1 className="text-6xl font-bold mb-10 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
         FAQ
       </h1>
 
