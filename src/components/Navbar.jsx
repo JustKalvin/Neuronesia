@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Logo from "./Logo";
+import Logo from "../assets/logo/Aivise-Logo.png";
 import users from "../assets/user/user.png";
 import "../style/style.css";
 import { useNavigate } from "react-router-dom";
@@ -41,10 +41,10 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="flex justify-between items-center px-6 md:px-12 py-4 bg-white">
+    <nav className="h-[80px] bg-[#FFFFFF] flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
       {/* Logo */}
       <Link to="/" className="flex items-center space-x-2">
-        <Logo />
+        <img src={Logo} alt="" className="w-[120px]"/>
       </Link>
 
       {/* Right side - Login button or User avatar/dropdown */}
