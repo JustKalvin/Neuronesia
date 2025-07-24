@@ -99,6 +99,7 @@ const Landing = () => {
             description="Known For Creator of the Lean Startup methodology and advisor to technology startups."
           />
         </div>
+        <Faq />
         <Footer />
     </div>
     

@@ -39,7 +39,7 @@ const Faq = () => {
   ];
 
   return (
-    <div className="px-6 md:px-20 lg:px-100 py-16">
+    <div className="px-10 sm:px-20 md:px-40 lg:px-60 xl:px-100 py-16 pb-20">
       <h1 className="text-6xl font-bold mb-10 text-center font-Montserrat">
         FAQ
       </h1>
@@ -52,7 +52,7 @@ const Faq = () => {
             onClick={() => toggleFAQ(index)}
           >
             <div className="flex justify-between items-center">
-              <h2 className="text-xl font-semibold">{item.question}</h2>
+              <h2 className="text-md font-semibold">{item.question}</h2>
               <ChevronDownIcon
                 className={`w-6 h-6 transform transition-transform duration-300 ${
                   openIndex === index ? "rotate-180" : ""
