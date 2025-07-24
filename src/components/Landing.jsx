@@ -3,10 +3,12 @@ import "../style/style.css";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import Card from "./Card";
+import users from '../assets/user/user.png'
 import user1 from "../assets/advisor/michael.jpg";
 import user2 from "../assets/advisor/covey.jpg";
 import user3 from "../assets/advisor/eric.jpg";
 import ParticlesComponent from "../components/Particles";
+import Faq from "../components/Faq";
 
 import { supabase } from "../lib/supabaseClient";
 
