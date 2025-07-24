@@ -75,29 +75,6 @@ const Landing = () => {
           </div>
         </section>
     </div>
-    // <div className="bg-lightGreen flex flex-col h-[100vh] justify-center items-center">
-    //   <h1 className="font-Montserrat font-bold text-[25px]">ADVISOR</h1>
-    //   <p className="w-[300px] text-center">Personalized Business Advisor</p>
-
-    //   <Link
-    //     to={isLoggedIn ? "/chatbot" : "/login"}
-    //     className="bg-[#739A88] text-white px-4 py-2 rounded-md mt-4 inline-block"
-    //   >
-    //     Get Started
-    //   </Link>
-    // </div>
-    <div className="bg-[#DEE4E2] flex flex-col h-[100vh] justify-center items-center">
-      <h1 className="font-bold text-[25px] font-poppins">ADVISOR</h1>
-
-      <p className="w-[300px] text-center">Personalized Business Advisor</p>
-
-      <Link
-        to={isLoggedIn ? "/chatbot" : "/login"}
-        className="bg-[#739A88] text-white px-4 py-2 rounded-md mt-4 inline-block"
-      >
-        Get Started
-      </Link>
-    </div>
   );
 };
 
