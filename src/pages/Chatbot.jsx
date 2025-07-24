@@ -249,7 +249,10 @@ const Chatbot = () => {
               <div className="flex gap-3 items-center">
                 {msg.sender === "user" ? (
                   <>
-                    <img src={user?.user_metadata?.avatar_url || users} className="w-7 h-7 rounded-full" />
+                    <img
+                      src={user?.user_metadata?.avatar_url || users}
+                      className="w-7 h-7 rounded-full"
+                    />
                     <p>{user?.user_metadata?.full_name || "You"}</p>
                   </>
                 ) : (
@@ -304,18 +307,27 @@ const Chatbot = () => {
         {/* Kondisional: jika analytic aktif, tampilkan upload file */}
         {analyticClicked ? (
           <div className="flex items-center gap-3">
+            <label
+              htmlFor="file-upload"
+              className="bg-white text-black px-4 py-2 rounded-lg cursor-pointer hover:bg-white hover:text-black border"
+            >
+              Choose File
+            </label>
             <input
+              id="file-upload"
               type="file"
               accept=".csv"
-              className="border border-gray-400 rounded-lg px-4 py-2"
+              className="hidden"
               onChange={(e) => {
                 const file = e.target.files[0];
                 if (file) {
                   setUploadedFile(file);
                 }
               }}
-              disabled={uploading} // ✅ disable input saat upload
             />
+            {uploadedFile && (
+              <span className="text-gray-600">{uploadedFile.name}</span>
+            )}
 
             <button
               onClick={() => handleUploadFile()}
