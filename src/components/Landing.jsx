@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../style/style.css";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
+import Card from "./Card";
 
 import { supabase } from "../lib/supabaseClient";
 
@@ -31,9 +32,9 @@ const Landing = () => {
       <Navbar />
       <hr />
       <div className="flex flex-col items-center justify-center mt-40">
-          <h1 className="text-6xl font-bold mb-4 text-center">Meet Aivise!</h1>
-          <h3 className="text-3xl font-bold mb-4 text-center">Your Intelligent Business Mentor</h3>
-          <p className="text-md mb-6 text-center max-w-2xl">
+          <h1 className="text-6xl font-bold mb-4 text-center font-Montserrat">Meet Aivise!</h1>
+          <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat">Your Intelligent Business Mentor</h3>
+          <p className="text-md mb-6 text-center max-w-2xl font-Poppins">
              Aivise is an AI mentor built to help business owners by providing advice grounded in real books from expert authors. Instead of giving generic answers, Aivise learns directly from trusted business literature to offer practical, proven insights tailored to your needs.
           </p>
           <div className="flex gap-4 mb-10">
@@ -55,9 +56,16 @@ const Landing = () => {
           </div>
 
           <div className="mt-10">
-            <h1 className="text-4xl font-bold">Meet your mentors!</h1>
+            <h1 className="text-4xl font-bold text-center mb-5">Meet your mentors!</h1>
+            <p className="text-md mb-6 text-center max-w-2xl font-Poppins">Aivise is powered by the insights of experienced business mentors whose ideas are shared through widely respected books. Our AI learns from a carefully selected library of real-world business literature, covering topics such as leadership, strategy, innovation, and growth. This ensures that the guidance Aivise provides is rooted in proven principles from trusted experts across the business world.
+            </p>
           </div>
-      </div>
+        </div>
+        <div className="max-w-5xl mx-auto p-8 flex flex-wrap justify-center gap-4">
+          <Card />
+          <Card />
+          <Card />
+        </div>
     </div>
     
   );
