@@ -20,7 +20,6 @@ const Chatbot = () => {
   const [analyticClicked, setAnalyticClicked] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
 
-
   // ✅ State untuk namespace Pinecone
   const [mentorCode, setMentorCode] = useState("");
 
@@ -140,8 +139,10 @@ const Chatbot = () => {
   };
 
   const handleAnalytic = () => {
-    setAnalyticClicked(analyticClicked => (!analyticClicked))
-  }
+    setAnalyticClicked((analyticClicked) => !analyticClicked);
+  };
+
+  const [uploading, setUploading] = useState(false);
 
   const handleUploadFile = async () => {
     if (!uploadedFile) {
@@ -149,12 +150,13 @@ const Chatbot = () => {
       return;
     }
 
+    setUploading(true); // ✅ mulai loading
     const formData = new FormData();
     formData.append("file", uploadedFile);
 
     try {
       const response = await axios.post(
-        "https://primary-production-9ee5.up.railway.app/webhook-test/analytic",
+        "https://primary-production-9ee5.up.railway.app/webhook/analytic",
         formData,
         {
           headers: {
@@ -174,17 +176,15 @@ const Chatbot = () => {
           id: prev.length + 1,
           sender: "bot",
           message: imageUrl,
-          type: "image"
+          type: "image",
         },
         {
           id: prev.length + 2,
           sender: "bot",
           message: insight,
-          type: "text"
-        }
+          type: "text",
+        },
       ]);
-
-
     } catch (error) {
       console.error("Upload error:", error);
 
@@ -195,10 +195,10 @@ const Chatbot = () => {
       };
 
       setMessages((prev) => [...prev, errorReply]);
+    } finally {
+      setUploading(false); // ✅ selesai loading
     }
   };
-
-
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
@@ -237,8 +237,9 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
-              }`}
+            className={`flex ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -254,10 +255,10 @@ const Chatbot = () => {
                         selectedMentor === "Michael E. Gerber"
                           ? michael
                           : selectedMentor === "Stephen R. Covey"
-                            ? covey
-                            : selectedMentor === "Eric Ries"
-                              ? eric
-                              : users // fallback jika belum pilih mentor
+                          ? covey
+                          : selectedMentor === "Eric Ries"
+                          ? eric
+                          : users // fallback jika belum pilih mentor
                       }
                       className="w-7 h-7 rounded-full object-cover"
                     />
@@ -268,17 +269,21 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
-                  ? "bg-black text-left text-white"
-                  : "bg-white text-left border-1"
-                  }`}
+                className={`rounded-lg px-5 py-3 max-w-md ${
+                  msg.sender === "user"
+                    ? "bg-black text-left text-white"
+                    : "bg-white text-left border-1"
+                }`}
               >
                 {msg.type === "image" ? (
-                  <img src={msg.message} alt="Chart" style={{ maxWidth: "100%" }} />
+                  <img
+                    src={msg.message}
+                    alt="Chart"
+                    style={{ maxWidth: "100%" }}
+                  />
                 ) : (
                   <ReactMarkdown>{msg.message}</ReactMarkdown>
                 )}
-
               </div>
             </div>
           </div>
@@ -306,14 +311,21 @@ const Chatbot = () => {
                   setUploadedFile(file);
                 }
               }}
+              disabled={uploading} // ✅ disable input saat upload
             />
 
             <button
               onClick={() => handleUploadFile()}
               type="button"
-              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
+              disabled={uploading} // ✅ prevent double click
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                uploading
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-white hover:text-black"
+              }`}
             >
-              Upload
+              {uploading ? "Analyzing Data..." : "Upload"}{" "}
+              {/* ✅ indikator loading */}
             </button>
           </div>
         ) : (
@@ -350,16 +362,14 @@ const Chatbot = () => {
 
           <button
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked
-              ? "bg-black text-white"
-              : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              analyticClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             Analytics
           </button>
         </div>
       </footer>
-
     </div>
   );
 };

@@ -60,12 +60,10 @@ function Login() {
   }, [user]);
 
   useEffect(() => {
-    // Ambil user saat komponen pertama kali dirender
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
     });
 
-    // Dengarkan perubahan status auth
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user || null);
@@ -94,35 +92,7 @@ function Login() {
   };
 
   return (
-    // <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-    //   <h1>Google Auth with Supabase</h1>
-    //   {theUsers && (
-    //     theUsers.map((item, idx) => {
-    //       return (
-    //         <div>
-    //           {item.full_name}
-    //         </div>
-    //       )
-    //     })
-    //   )}
-    //   {user ? (
-    //     <>
-    //       <img
-    //         src={user.user_metadata.avatar_url}
-    //         alt="Avatar"
-    //         style={{ borderRadius: '50%', width: 100, height: 100 }}
-    //       />
-    //       <h2>{user.user_metadata.full_name}</h2>
-    //       <p>Email: {user.email}</p>
-    //       <p>User ID: {user.id}</p>
-    //       <button onClick={handleLogout}>Logout</button>
-    //     </>
-    //   ) : (
-    //     <button onClick={handleLogin} className='border-1 px-5 py-2 rounded-lg cursor-pointer hover:bg-black hover:text-white duration-200'>Login with Google Account</button>
-    //   )}
-    // </div>
-
-    <div className="relative h-[100vh] flex flex-col justify-center items-center gap-10">
+    <div className="relative h-[100vh] flex flex-col justify-center items-center gap-10 overflow-hidden">
       {/* Background Particles */}
       <ParticlesComponent
         id="particles"
@@ -130,18 +100,22 @@ function Login() {
       />
 
       {/* Foreground Content */}
-      <img src={Logo} alt="" className="w-[300px] z-10" />
+      <img
+        src={Logo}
+        alt=""
+        className="w-[300px] z-10 animate-fade-in"
+      />
 
-      <div className="flex flex-col justify-center items-center gap-5 z-10">
+      <div className="flex flex-col justify-center items-center gap-5 z-10 animate-slide-up">
         <button
           onClick={handleLogin}
-          className="border px-5 py-2 rounded-lg cursor-pointer hover:bg-black hover:text-white duration-300"
+          className="border px-5 py-2 rounded-lg cursor-pointer hover:bg-black hover:text-white duration-300 transform hover:scale-105 hover:shadow-lg animate-bounce-slow"
         >
           Login with Google Account
         </button>
         <Link
           to="/"
-          className="border px-5 py-2 rounded-lg hover:bg-black hover:text-white duration-200"
+          className="border px-5 py-2 rounded-lg hover:bg-black hover:text-white duration-300 transform hover:scale-105 hover:shadow-lg"
         >
           Back to Home Page
         </Link>
