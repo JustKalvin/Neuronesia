@@ -7,10 +7,12 @@ import users from '../assets/user/user.png'
 import user1 from "../assets/advisor/michael.jpg";
 import user2 from "../assets/advisor/covey.jpg";
 import user3 from "../assets/advisor/eric.jpg";
+import screenshot from "../assets/graphic/Screenshot.png";
 import ParticlesComponent from "../components/Particles";
 import Faq from "../components/Faq";
 
 import { supabase } from "../lib/supabaseClient";
+import Footer from "./Footer";
 
 const Landing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,7 +47,7 @@ const Landing = () => {
       <Navbar />
       <hr />
       <div className="flex flex-col items-center justify-center mt-25 md:mt-40">
-        <div className="h-[70vh] items-center flex flex-col mb-20 md:mb-0">
+        <div className="h-[50vh] items-center flex flex-col mb-20 md:mb-0">
           <h1 className="text-6xl font-bold mb-4 text-center font-Montserrat">Meet Aivise!</h1>
           <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat">Your Intelligent Business Mentor</h3>
           <p className="text-md mb-6 text-center max-w-2xl font-Poppins">
@@ -69,14 +71,18 @@ const Landing = () => {
             </a>
           </div>
         </div>
-          
+          <div>
+            <img src={screenshot} alt="" className="max-w-4xl mb-35"/>
+          </div>
+
+
           <div>
             <h1 className="text-6xl font-bold text-center mb-5">Meet your mentors!</h1>
             <p className="text-md mb-6 text-center max-w-2xl font-Poppins">Aivise is powered by the insights of experienced business mentors whose ideas are shared through widely respected books. Our AI learns from a carefully selected library of real-world business literature, covering topics such as leadership, strategy, innovation, and growth. This ensures that the guidance Aivise provides is rooted in proven principles from trusted experts across the business world.
             </p>
           </div>
         </div>
-        <div className="max-w-5xl mx-auto p-8 flex flex-wrap justify-center gap-4">
+        <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-20">
           <Card 
             image={user1}
             name="Michael E. Gerber"
@@ -93,6 +99,7 @@ const Landing = () => {
             description="Known For Creator of the Lean Startup methodology and advisor to technology startups."
           />
         </div>
+        <Footer />
     </div>
     
   );

@@ -41,7 +41,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="h-[80px] bg-[#FFFFFF] flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
+    <nav className="h-[80px] bg-white flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
       {/* Logo */}
       <Link to="/" className="flex items-center space-x-2">
         <img src={Logo} alt="" className="w-[120px]"/>
