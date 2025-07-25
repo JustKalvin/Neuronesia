@@ -50,7 +50,7 @@ const Chatbot = () => {
   const [linearRegressionClicked, setLinearRegressionClicked] = useState(false);
   const [logisticRegressionClicked, setLogisticRegressionClicked] = useState(false);
   const [clusteringClicked, setClusteringClicked] = useState(false)
-
+  const [isOpenMentor, setIsOpenMentor] = useState(false); // dropdown state
 
   const tutorialSteps = [
     {
@@ -144,6 +144,21 @@ const Chatbot = () => {
   };
 
   const [mentorLocked, setMentorLocked] = useState(false);
+
+  const handleMentorSelect = (mentor) => {
+    setIsOpenMentor(false); // close mentor dropdown
+    setIsOpen(false);       // close profile dropdown if open
+    setSelectedMentor(mentor.name);
+    setActiveMentorLabel(mentor.name);
+
+    const codeMap = {
+      "Michael E. Gerber": "EMYTH",
+      "Stephen R. Covey": "7HABITS",
+      "Eric Ries": "LEAN",
+    };
+
+    setMentorCode(codeMap[mentor.name]);
+  };
 
   const [activeMentorLabel, setActiveMentorLabel] = useState("");
 
@@ -254,15 +269,15 @@ const Chatbot = () => {
   };
 
   const handleAnalytic = () => {
-    setAnalyticClicked((analyticClicked) => !analyticClicked);
+    setAnalyticClicked((prev) => !prev);
     setPredictClicked(false);
     setAlgoClicked(false);
-    // Simpan label mentor aktif sebelum reset
+
     if (selectedMentor) {
       setActiveMentorLabel(selectedMentor);
+      setMentorLocked(true);
     }
 
-    // Reset mentor selection
     setMentorCode("");
     setSelectedMentor("");
     setMentorLocked(false);
@@ -649,26 +664,50 @@ const Chatbot = () => {
 
         {/* Mentor dropdown + Analytics toggle */}
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <select
-            data-tutorial="select"
-            className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
-            onChange={handleMentorChange}
-            disabled={mentorLocked || analyticClicked || predictClicked} // ⛔ disabled jika analytic/predict aktif
-            value={
-              selectedMentor
-                ? selectedMentor === "Michael E. Gerber"
-                  ? "orang1"
-                  : selectedMentor === "Stephen R. Covey"
-                    ? "orang2"
-                    : "orang3"
-                : ""
-            } // ensure controlled
-          >
-            <option value="">Choose Mentor</option>
-            <option value="orang1">Michael E. Gerber</option>
-            <option value="orang2">Stephen R. Covey</option>
-            <option value="orang3">Eric Ries</option>
-          </select>
+          <div className="relative">
+            <button
+              className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer bg-white text-black"
+              disabled={mentorLocked || analyticClicked || predictClicked}
+              onClick={() => {
+                setIsOpen(false); // ✅ close sign-out dropdown
+                setIsOpenMentor((prev) => !prev); // toggle mentor dropdown
+              }}
+            >
+              {selectedMentor || "Choose Mentor"}
+            </button>
+
+            {/* Dropdown that opens upward */}
+            {isOpenMentor && (
+              <div className="absolute bottom-full mb-2 w-full bg-white border rounded-lg shadow-lg z-50">
+                {[
+                  {
+                    value: "orang1",
+                    name: "Michael E. Gerber",
+                    desc: "Author of E-Myth. Expert in business systems.",
+                  },
+                  {
+                    value: "orang2",
+                    name: "Stephen R. Covey",
+                    desc: "Author of 7 Habits. Focus on leadership and values.",
+                  },
+                  {
+                    value: "orang3",
+                    name: "Eric Ries",
+                    desc: "Creator of Lean Startup. Specializes in innovation.",
+                  },
+                ].map((mentor) => (
+                  <div
+                    key={mentor.value}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleMentorSelect(mentor)}
+                  >
+                    <p className="font-semibold">{mentor.name}</p>
+                    <p className="text-sm text-gray-500">{mentor.desc}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           <button
             data-tutorial="analytics"
