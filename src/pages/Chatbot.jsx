@@ -46,11 +46,17 @@ const Chatbot = () => {
   const [skipTutor, setSkipTutor] = useState(true);
   const [tempUser, setTempUser] = useState(null);
   const [predictClicked, setPredictClicked] = useState(false);
+<<<<<<< Updated upstream
   const [algoClicked, setAlgoClicked] = useState(false);
   const [linearRegressionClicked, setLinearRegressionClicked] = useState(false);
   const [logisticRegressionClicked, setLogisticRegressionClicked] = useState(false);
   const [clusteringClicked, setClusteringClicked] = useState(false)
   const [isOpenMentor, setIsOpenMentor] = useState(false); // dropdown state
+=======
+  const [newsClicked, setNewsClicked] = useState(false);
+  const [selectedSector, setSelectedSector] = useState("");
+
+>>>>>>> Stashed changes
 
   const tutorialSteps = [
     {
@@ -180,38 +186,75 @@ const Chatbot = () => {
     setInput("");
     setLoading(true);
 
-    try {
-      const response = await axios.post(
-        "https://primary-production-9ee5.up.railway.app/webhook/bookrag",
-        {
-          message: input,
-          namespace: mentorCode,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+    if (newsClicked) {
+      try {
+        const response = await axios.post(
+          "https://primary-production-9ee5.up.railway.app/webhook-test/news",
+          {
+            message: input,
+            sector: selectedSector,
           },
-        }
-      );
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-      const botReply = {
-        id: messages.length + 2,
-        sender: "bot",
-        message: response.data.output.response || "No response from server",
-        displayName: selectedMentor || "AI Advisor", // ← Tambahkan ini
-      };
+        const botReply = {
+          id: messages.length + 2,
+          sender: "bot",
+          message: response.data.output.response || "No response from server",
+          displayName: selectedMentor || "AI Advisor", // ← Tambahkan ini
+        };
 
-      setMessages((prev) => [...prev, botReply]);
-    } catch (error) {
-      console.error("API Error:", error);
-      const errorReply = {
-        id: messages.length + 2,
-        sender: "bot",
-        message: "Error fetching response. Please try again.",
-      };
-      setMessages((prev) => [...prev, errorReply]);
-    } finally {
-      setLoading(false);
+        setMessages((prev) => [...prev, botReply]);
+      } catch (error) {
+        console.error("API Error:", error);
+        const errorReply = {
+          id: messages.length + 2,
+          sender: "bot",
+          message: "Error fetching response. Please try again.",
+        };
+        setMessages((prev) => [...prev, errorReply]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    else {
+      try {
+        const response = await axios.post(
+          "https://primary-production-9ee5.up.railway.app/webhook/bookrag",
+          {
+            message: input,
+            namespace: mentorCode,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const botReply = {
+          id: messages.length + 2,
+          sender: "bot",
+          message: response.data.output.response || "No response from server",
+          displayName: selectedMentor || "AI Advisor", // ← Tambahkan ini
+        };
+
+        setMessages((prev) => [...prev, botReply]);
+      } catch (error) {
+        console.error("API Error:", error);
+        const errorReply = {
+          id: messages.length + 2,
+          sender: "bot",
+          message: "Error fetching response. Please try again.",
+        };
+        setMessages((prev) => [...prev, errorReply]);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -271,8 +314,13 @@ const Chatbot = () => {
   const handleAnalytic = () => {
     setAnalyticClicked((prev) => !prev);
     setPredictClicked(false);
+<<<<<<< Updated upstream
     setAlgoClicked(false);
 
+=======
+    setNewsClicked(false);
+    // Simpan label mentor aktif sebelum reset
+>>>>>>> Stashed changes
     if (selectedMentor) {
       setActiveMentorLabel(selectedMentor);
       setMentorLocked(true);
@@ -286,7 +334,7 @@ const Chatbot = () => {
   const handlePredict = () => {
     setPredictClicked((predictClicked) => !predictClicked);
     setAnalyticClicked(false);
-    setAlgoClicked(false);
+    setNewsClicked(false);
 
     if (selectedMentor) {
       setActiveMentorLabel(selectedMentor);
@@ -297,8 +345,8 @@ const Chatbot = () => {
     setMentorLocked(false);
   };
 
-  const handleAlgo = () => {
-    setAlgoClicked((algoClicked) => !algoClicked);
+  const handleNews = () => {
+    setNewsClicked((newsClicked) => !newsClicked);
     setAnalyticClicked(false);
     setPredictClicked(false);
 
@@ -311,23 +359,6 @@ const Chatbot = () => {
     setMentorLocked(false);
   };
 
-  const handleLinearRegression = () => {
-    setLinearRegressionClicked(linearRegressionClicked => !linearRegressionClicked);
-    setLogisticRegressionClicked(logisticRegressionClicked => false);
-    setClusteringClicked(clusteringClicked => false);
-  }
-
-  const handleLogisticRegression = () => {
-    setLogisticRegressionClicked(logisticRegressionClicked => !logisticRegressionClicked);
-    setLinearRegressionClicked(linearRegressionClicked => false);
-    setClusteringClicked(clusteringClicked => false)
-  }
-
-  const handleClustering = () => {
-    setClusteringClicked(clusteringClicked => !clusteringClicked);
-    setLinearRegressionClicked(linearRegressionClicked => false);
-    setLogisticRegressionClicked(logisticRegressionClicked => false);
-  }
   const [uploading, setUploading] = useState(false);
 
   const handleUploadFile = async () => {
@@ -342,9 +373,7 @@ const Chatbot = () => {
     if (analyticClicked) {
       try {
         let tempUrls = "";
-        if (analyticClicked)
-          tempUrls =
-            "https://primary-production-9ee5.up.railway.app/webhook/analytic";
+        tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/analytic";
         // if (predictClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook-test/insight";
         const response = await axios.post(tempUrls, formData, {
           headers: {
@@ -433,6 +462,11 @@ const Chatbot = () => {
   const handleMicClicked = () => {
     setMicClicked((micClicked) => !micClicked);
   };
+
+  const handleNewsSectorClick = (sector) => {
+    if (selectedSector == sector) setSelectedSector(selectedSector => (""))
+    else setSelectedSector(selectedSector => (sector));
+  }
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
@@ -548,7 +582,7 @@ const Chatbot = () => {
       {/* Footer Input */}
       <footer className="px-[200px] py-8 max-lg:px-[100px] max-sm:px-[40px]">
         {/* Kondisional: jika analytic aktif, tampilkan upload file */}
-        {analyticClicked || predictClicked || algoClicked ? (
+        {analyticClicked || predictClicked ? (
           <div className="flex items-center gap-3">
             <label
               htmlFor="file-upload"
@@ -583,6 +617,7 @@ const Chatbot = () => {
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
             </button>
+<<<<<<< Updated upstream
             {algoClicked && (
               <div>
                 <button
@@ -608,6 +643,8 @@ const Chatbot = () => {
                 </button>
               </div>
             )}
+=======
+>>>>>>> Stashed changes
           </div>
         ) : (
           <div className="flex items-center gap-3">
@@ -646,12 +683,16 @@ const Chatbot = () => {
             <input
               data-tutorial="input"
               type="text"
-              placeholder="Ask AI..."
+              placeholder={newsClicked ? "Enter your business name" : "Ask AI..."}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {
+                setInput(e.target.value);
+                if (newsClicked) setBusinessName(e.target.value);
+              }}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               className="text-black flex-1 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
+
             <button
               type="button"
               onClick={handleSend}
@@ -659,6 +700,20 @@ const Chatbot = () => {
             >
               Send
             </button>
+            {newsClicked && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {["trade", "industry", "agriculture", "fisheries", "finance", "tourism", "technology"].map((sector) => (
+                  <button
+                    key={sector}
+                    onClick={() => handleNewsSectorClick(sector)}
+                    className={`px-3 py-2 rounded-lg border transition-colors ${selectedSector === sector ? "bg-black text-white" : "bg-white text-black"
+                      }`}
+                  >
+                    {sector}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -727,11 +782,11 @@ const Chatbot = () => {
           </button>
           <button
             data-tutorial="algo"
-            onClick={handleAlgo}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${algoClicked ? "bg-black text-white" : "bg-white text-black"
+            onClick={handleNews}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${newsClicked ? "bg-black text-white" : "bg-white text-black"
               }`}
           >
-            Algorithm
+            News
           </button>
         </div>
       </footer>
