@@ -140,7 +140,7 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
 
       {/* Modal positioned to avoid covering highlighted elements */}
       <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none font-Poppins">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg pointer-events-auto mx-4">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg pointer-events-auto mx-4 border-1">
           {/* Step indicator */}
           <div className="flex justify-between items-center mb-4">
             <div className="flex space-x-2">
@@ -184,7 +184,7 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
             ) : (
               <button
                 onClick={handleFinish}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
+                className="bg-white border-1 border-black text-black hover:bg-gray cursor-pointer px-4 py-2 rounded-lg transition-colors"
               >
                 Finish
               </button>

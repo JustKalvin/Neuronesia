@@ -15,7 +15,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import TutorialModal from "../components/TutorialModal";
-import { updateUser, getUsersById } from "../query"
+import { updateUser, getUsersById } from "../query";
 
 const Chatbot = () => {
   const {
@@ -101,14 +101,13 @@ const Chatbot = () => {
   useEffect(() => {
     const fetch = async () => {
       if (user) {
-        const result = await getUsersById(user.id)
-        console.log(result)
-        setSkipTutor(skipTutor => result.data.skip_tutor)
+        const result = await getUsersById(user.id);
+        console.log(result);
+        setSkipTutor((skipTutor) => result.data.skip_tutor);
       }
-    }
-    fetch()
-  }, [user])
-
+    };
+    fetch();
+  }, [user]);
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("visited");
@@ -140,6 +139,8 @@ const Chatbot = () => {
   };
 
   const [mentorLocked, setMentorLocked] = useState(false);
+
+  const [activeMentorLabel, setActiveMentorLabel] = useState("");
 
   const handleSend = async () => {
     if (input.trim() === "") return;
@@ -177,6 +178,7 @@ const Chatbot = () => {
         id: messages.length + 2,
         sender: "bot",
         message: response.data.output.response || "No response from server",
+        displayName: selectedMentor || "AI Advisor", // ← Tambahkan ini
       };
 
       setMessages((prev) => [...prev, botReply]);
@@ -242,17 +244,37 @@ const Chatbot = () => {
       setMentorCode("");
       setSelectedMentor("");
     }
+
+    setActiveMentorLabel(""); // Reset agar nama mentor tidak tertinggal
   };
 
   const handleAnalytic = () => {
     setAnalyticClicked((analyticClicked) => !analyticClicked);
-    setPredictClicked(predictClicked => false);
+    setPredictClicked(false);
+
+    // Simpan label mentor aktif sebelum reset
+    if (selectedMentor) {
+      setActiveMentorLabel(selectedMentor);
+    }
+
+    // Reset mentor selection
+    setMentorCode("");
+    setSelectedMentor("");
+    setMentorLocked(false);
   };
 
   const handlePredict = () => {
-    setPredictClicked(predictClicked => (!predictClicked));
-    setAnalyticClicked(analyticClicked => false);
-  }
+    setPredictClicked((predictClicked) => !predictClicked);
+    setAnalyticClicked(false);
+
+    if (selectedMentor) {
+      setActiveMentorLabel(selectedMentor);
+    }
+
+    setMentorCode("");
+    setSelectedMentor("");
+    setMentorLocked(false);
+  };
 
   const [uploading, setUploading] = useState(false);
 
@@ -268,17 +290,15 @@ const Chatbot = () => {
     if (analyticClicked) {
       try {
         let tempUrls = "";
-        if (analyticClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/analytic";
+        if (analyticClicked)
+          tempUrls =
+            "https://primary-production-9ee5.up.railway.app/webhook/analytic";
         // if (predictClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook-test/insight";
-        const response = await axios.post(tempUrls
-          ,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await axios.post(tempUrls, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         const responseData = response.data;
 
@@ -292,12 +312,14 @@ const Chatbot = () => {
             sender: "bot",
             message: imageUrl,
             type: "image",
+            displayName: "AI Advisor", // ← Tambahkan ini
           },
           {
             id: prev.length + 2,
             sender: "bot",
             message: insight,
             type: "text",
+            displayName: "AI Advisor", // ← Tambahkan ini
           },
         ]);
       } catch (error) {
@@ -316,31 +338,29 @@ const Chatbot = () => {
     }
     if (predictClicked) {
       try {
-        let tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/insight";
-        const response = await axios.post(tempUrls
-          ,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        let tempUrls =
+          "https://primary-production-9ee5.up.railway.app/webhook/insight";
+        const response = await axios.post(tempUrls, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
         console.log("response : ", response);
         const responseData = response.data[0];
 
         // const insight = responseData.insight;
-        const imageUrl = responseData.url;
-        console.log("imageUrl : ", imageUrl)
+        const fileUrl = responseData.url;
+        const downloadLink = `<a href="${fileUrl}" target="_blank">📄 Click here to download your future prediction report</a>`;
 
         setMessages((prev) => [
           ...prev,
           {
             id: prev.length + 1,
             sender: "bot",
-            message: imageUrl,
-            type: "text",
-          }
+            message: downloadLink,
+            type: "html",
+            displayName: "AI Advisor", // ← Tambahkan ini
+          },
         ]);
       } catch (error) {
         console.error("Upload error:", error);
@@ -348,7 +368,7 @@ const Chatbot = () => {
         const errorReply = {
           id: messages.length + 1,
           sender: "bot",
-          message: "Upload failed or response unreadable. Please try again.",
+          message: "Analysis failed! Please try again with another data.",
         };
 
         setMessages((prev) => [...prev, errorReply]);
@@ -364,7 +384,7 @@ const Chatbot = () => {
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
-      {(user && !skipTutor) && (
+      {user && !skipTutor && (
         <TutorialModal
           isOpen={showTutorial}
           onClose={() => setShowTutorial(false)}
@@ -412,8 +432,9 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
-              }`}
+            className={`flex ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -428,28 +449,30 @@ const Chatbot = () => {
                 ) : (
                   <>
                     <img
-                      src={
-                        selectedMentor === "Michael E. Gerber"
-                          ? michael
-                          : selectedMentor === "Stephen R. Covey"
-                            ? covey
-                            : selectedMentor === "Eric Ries"
-                              ? eric
-                              : users // fallback jika belum pilih mentor
-                      }
                       className="w-7 h-7 rounded-full object-cover"
+                      src={
+                        msg.displayName === "Michael E. Gerber"
+                          ? michael
+                          : msg.displayName === "Stephen R. Covey"
+                          ? covey
+                          : msg.displayName === "Eric Ries"
+                          ? eric
+                          : users
+                      }
+                      alt="bot-avatar"
                     />
-                    {/* ✅ Tampilkan nama mentor jika ada */}
-                    <p>{selectedMentor || "AI Advisor"}</p>
+
+                    <p>{msg.displayName || "AI Advisor"}</p>
                   </>
                 )}
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
-                  ? "bg-black text-left text-white"
-                  : "bg-white text-left border-1"
-                  }`}
+                className={`rounded-lg px-5 py-3 max-w-md ${
+                  msg.sender === "user"
+                    ? "bg-black text-left text-white"
+                    : "bg-white text-left border-1"
+                }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -457,6 +480,8 @@ const Chatbot = () => {
                     alt="Chart"
                     style={{ maxWidth: "100%" }}
                   />
+                ) : msg.type === "html" ? (
+                  <div dangerouslySetInnerHTML={{ __html: msg.message }} />
                 ) : (
                   <ReactMarkdown>{msg.message}</ReactMarkdown>
                 )}
@@ -501,10 +526,11 @@ const Chatbot = () => {
               onClick={() => handleUploadFile()}
               type="button"
               disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
-                ? "bg-gray-400 text-white cursor-not-allowed"
-                : "bg-black text-white hover:bg-white hover:text-black"
-                }`}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                uploading
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-white hover:text-black"
+              }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
@@ -534,10 +560,11 @@ const Chatbot = () => {
                   resetTranscript();
                   handleStart();
                 }}
-                className={`px-3 py-2 rounded-lg border transition-colors ${listening
-                  ? "bg-green-500 text-white"
-                  : "bg-white text-black hover:bg-gray-100"
-                  }`}
+                className={`px-3 py-2 rounded-lg border transition-colors ${
+                  listening
+                    ? "bg-green-500 text-white"
+                    : "bg-white text-black hover:bg-gray-100"
+                }`}
               >
                 🎙️
               </button>
@@ -569,7 +596,16 @@ const Chatbot = () => {
             data-tutorial="select"
             className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
             onChange={handleMentorChange}
-            disabled={mentorLocked}
+            disabled={mentorLocked || analyticClicked || predictClicked} // ⛔ disabled jika analytic/predict aktif
+            value={
+              selectedMentor
+                ? selectedMentor === "Michael E. Gerber"
+                  ? "orang1"
+                  : selectedMentor === "Stephen R. Covey"
+                  ? "orang2"
+                  : "orang3"
+                : ""
+            } // ensure controlled
           >
             <option value="">Choose Mentor</option>
             <option value="orang1">Michael E. Gerber</option>
@@ -580,16 +616,18 @@ const Chatbot = () => {
           <button
             data-tutorial="analytics"
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              analyticClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             Analytics
           </button>
           <button
             data-tutorial="predict"
             onClick={handlePredict}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${predictClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              predictClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             Future Prediction
           </button>
