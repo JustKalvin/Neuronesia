@@ -11,7 +11,7 @@ import video from "../assets/video/Untitled.mp4";
 import ParticlesComponent from "../components/Particles";
 import Faq from "../components/Faq";
 import teams from "../assets/teams.jpg";
-import { motion,useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 
 import { supabase } from "../lib/supabaseClient";
 import Footer from "./Footer";
@@ -94,8 +94,6 @@ const Landing = () => {
               See Documentation
             </a>
           </div>
-          
-          
         </div>
         <div className="px-[50px] md:px-[200px] xl:mt-15 rounded">
           <video
@@ -109,13 +107,8 @@ const Landing = () => {
           </video>
         </div>
 
-        <motion.div
-          ref={mentorRef}
-          initial={{ opacity: 0, y: 50 }}
-          animate={isMentorInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: "easeOut" }}>
-          <h1 className="text-6xl font-bold text-center mb-5 mt-25 max-md:text-4xl max-lg:text-5xl"
-          >
+        <div>
+          <h1 className="text-6xl font-bold text-center mb-5 mt-25 max-md:text-4xl max-lg:text-5xl">
             Meet your mentors!
           </h1>
           <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-sm:px-5">
@@ -126,7 +119,7 @@ const Landing = () => {
             growth. This ensures that the guidance Aivise provides is rooted in
             proven principles from trusted experts across the business world.
           </p>
-        </motion.div>
+        </div>
       </div>
       <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-10 max-sm:mb-5">
         <Card
