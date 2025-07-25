@@ -93,6 +93,12 @@ const Chatbot = () => {
       highlight: "predict",
     },
     {
+      title: "Scrape News for Business Impact 📰",
+      content:
+        "Click the 'News' button, choose the news category you're interested in, and the AI will scrape recent articles. It will then analyze the content and provide insights on how these events might impact your business.",
+      highlight: "news",
+    },
+    {
       title: "Manage Your Profile",
       content:
         "Click your profile picture at the top right to logout. Your session and data are managed securely with Supabase.",
@@ -514,9 +520,8 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+              }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -536,10 +541,10 @@ const Chatbot = () => {
                         msg.displayName === "Michael E. Gerber"
                           ? michael
                           : msg.displayName === "Stephen R. Covey"
-                          ? covey
-                          : msg.displayName === "Eric Ries"
-                          ? eric
-                          : users
+                            ? covey
+                            : msg.displayName === "Eric Ries"
+                              ? eric
+                              : users
                       }
                       alt="bot-avatar"
                     />
@@ -550,11 +555,10 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${
-                  msg.sender === "user"
-                    ? "bg-black text-left text-white"
-                    : "bg-white text-left border-1"
-                }`}
+                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
+                  ? "bg-black text-left text-white"
+                  : "bg-white text-left border-1"
+                  }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -610,11 +614,10 @@ const Chatbot = () => {
                 onClick={() => handleUploadFile()}
                 type="button"
                 disabled={uploading}
-                className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${
-                  uploading
-                    ? "bg-gray-400 text-white cursor-not-allowed"
-                    : "bg-black text-white hover:bg-white hover:text-black"
-                }`}
+                className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${uploading
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-white hover:text-black"
+                  }`}
               >
                 {uploading ? "Analyzing Data..." : "Upload"}
               </button>
@@ -624,31 +627,28 @@ const Chatbot = () => {
               <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                 <button
                   onClick={handleLinearRegression}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${
-                    linearRegressionClicked
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
-                  }`}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${linearRegressionClicked
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                    }`}
                 >
                   Linear Regression 2 Features
                 </button>
                 <button
                   onClick={handleLogisticRegression}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${
-                    logisticRegressionClicked
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
-                  }`}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${logisticRegressionClicked
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                    }`}
                 >
                   Logistic Regression
                 </button>
                 <button
                   onClick={handleClustering}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${
-                    clusteringClicked
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
-                  }`}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${clusteringClicked
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
+                    }`}
                 >
                   Clustering
                 </button>
@@ -681,11 +681,10 @@ const Chatbot = () => {
                     resetTranscript();
                     handleStart();
                   }}
-                  className={`px-3 py-2 rounded-lg border transition-colors whitespace-nowrap ${
-                    listening
-                      ? "bg-green-500 text-white"
-                      : "bg-white text-black hover:bg-gray-100"
-                  }`}
+                  className={`px-3 py-2 rounded-lg border transition-colors whitespace-nowrap ${listening
+                    ? "bg-green-500 text-white"
+                    : "bg-white text-black hover:bg-gray-100"
+                    }`}
                 >
                   🎙️
                 </button>
@@ -748,6 +747,7 @@ const Chatbot = () => {
         <div className="mt-4 flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3">
           <div className="relative w-full sm:w-auto">
             <button
+              data-tutorial="select"
               className="border rounded-lg px-4 py-2 w-full sm:w-[200px] cursor-pointer bg-white text-black disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={mentorLocked || analyticClicked || predictClicked}
               onClick={() => {
@@ -795,27 +795,24 @@ const Chatbot = () => {
             <button
               data-tutorial="analytics"
               onClick={handleAnalytic}
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${
-                analyticClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
+                }`}
             >
               Analytics
             </button>
             <button
               data-tutorial="predict"
               onClick={handlePredict}
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${
-                predictClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${predictClicked ? "bg-black text-white" : "bg-white text-black"
+                }`}
             >
               Future
             </button>
             <button
-              data-tutorial="algo"
+              data-tutorial="news"
               onClick={handleNews}
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${
-                newsClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${newsClicked ? "bg-black text-white" : "bg-white text-black"
+                }`}
             >
               News
             </button>

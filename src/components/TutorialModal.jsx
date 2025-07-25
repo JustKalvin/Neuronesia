@@ -42,6 +42,12 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
       highlight: "predict",
     },
     {
+      title: "Scrape News for Business Impact 📰",
+      content:
+        "Click the 'News' button, choose the news category you're interested in, and the AI will scrape recent articles. It will then analyze the content and provide insights on how these events might impact your business.",
+      highlight: "news",
+    },
+    {
       title: "Manage Your Profile",
       content:
         "Click your profile picture at the top right to logout. Your session and data are managed securely with Supabase.",
