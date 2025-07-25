@@ -16,6 +16,8 @@ import { motion,useInView } from "framer-motion";
 import { supabase } from "../lib/supabaseClient";
 import Footer from "./Footer";
 
+const MotionLink = motion(Link);
+
 const Landing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -54,14 +56,8 @@ const Landing = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             Meet Aivise!
-          </motion.h1>
-
-          <motion.h3
-            className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5 max-sm:px-5"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
+          </h1>
+          <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5 max-sm:px-5">
             Your Intelligent Business Mentor
           </motion.h3>
           <motion.p
@@ -75,8 +71,9 @@ const Landing = () => {
             generic answers, Aivise learns directly from trusted business
             literature to offer practical, proven insights tailored to your
             needs.
-          </motion.p>
-
+          </p>
+          
+          
           <div className="flex gap-4 mb-10">
             <Link
               to={isLoggedIn ? "/chatbot" : "/login"}
