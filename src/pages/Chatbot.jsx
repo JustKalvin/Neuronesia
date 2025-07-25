@@ -11,15 +11,32 @@ import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 const Chatbot = () => {
+  const {
+    transcript,
+    listening,
+    resetTranscript,
+    browserSupportsSpeechRecognition,
+  } = useSpeechRecognition();
+
+  const handleStart = () => {
+    SpeechRecognition.startListening({ continuous: true });
+  };
+
+  const handleStop = () => {
+    SpeechRecognition.stopListening();
+  };
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [analyticClicked, setAnalyticClicked] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
-
+  const [micClicked, setMicClicked] = useState(false);
   // ✅ State untuk namespace Pinecone
   const [mentorCode, setMentorCode] = useState("");
 
@@ -114,6 +131,12 @@ const Chatbot = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (micClicked) {
+      setInput(transcript);
+    }
+  }, [transcript]);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -205,6 +228,11 @@ const Chatbot = () => {
     }
   };
 
+   const handleMicClicked = () => {
+    setMicClicked(micClicked => (!micClicked))
+  }
+
+
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
       {/* Header */}
@@ -242,8 +270,9 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
-              }`}
+            className={`flex ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -262,10 +291,10 @@ const Chatbot = () => {
                         selectedMentor === "Michael E. Gerber"
                           ? michael
                           : selectedMentor === "Stephen R. Covey"
-                            ? covey
-                            : selectedMentor === "Eric Ries"
-                              ? eric
-                              : users // fallback jika belum pilih mentor
+                          ? covey
+                          : selectedMentor === "Eric Ries"
+                          ? eric
+                          : users // fallback jika belum pilih mentor
                       }
                       className="w-7 h-7 rounded-full object-cover"
                     />
@@ -276,10 +305,11 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
-                  ? "bg-black text-left text-white"
-                  : "bg-white text-left border-1"
-                  }`}
+                className={`rounded-lg px-5 py-3 max-w-md ${
+                  msg.sender === "user"
+                    ? "bg-black text-left text-white"
+                    : "bg-white text-left border-1"
+                }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -333,10 +363,11 @@ const Chatbot = () => {
               onClick={() => handleUploadFile()}
               type="button"
               disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
-                ? "bg-gray-400 text-white cursor-not-allowed"
-                : "bg-black text-white hover:bg-white hover:text-black"
-                }`}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                uploading
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-white hover:text-black"
+              }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
@@ -344,6 +375,34 @@ const Chatbot = () => {
           </div>
         ) : (
           <div className="flex items-center gap-3">
+            {/* 🎙️ Tombol Mic */}
+            {micClicked ? (
+              <button
+                type="button"
+                onClick={() => {
+                  handleMicClicked();
+                  handleStop()
+                }}
+                className={"px-3 py-2 rounded-lg border transition-colors bg-red-500 text-white hover:bg-red-600"}
+              >
+                ❌ Stop
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  handleMicClicked()
+                  resetTranscript();
+                  handleStart(); // ✅ panggil fungsi handleStart (pakai 'id-ID')
+                }}
+                className={`px-3 py-2 rounded-lg border transition-colors ${listening ? "bg-green-500 text-white" : "bg-white text-black hover:bg-gray-100"}`}
+
+              >
+                🎙️
+              </button>)}
+
+
+            {/* Input text */}
             <input
               type="text"
               placeholder="Ask AI..."
@@ -377,8 +436,9 @@ const Chatbot = () => {
 
           <button
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              analyticClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             Analytics
           </button>
