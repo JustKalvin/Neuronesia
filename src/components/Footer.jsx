@@ -2,11 +2,11 @@ import logo from "../assets/logo/Logo-Aivise-White.png";
 
 const Footer = () => {
   return (
-    <footer className="pt-5 h-32 bg-black text-white py-5 px-15 flex justify-between items-center max-sm:flex-col max-sm:justify-center max-sm:gap-3">
-      <div className="flex items-center">
-        <p>Made by Neuronesia</p>
+    <footer className="pt-5 h-32 bg-black text-white py-5 px-15 flex justify-center items-center max-sm:flex-col max-sm:justify-center max-sm:gap-3">
+      <div className="flex items-center justify-center">
+        <p className="font-bold">Made by Neuronesia</p>
       </div>
-      <div className="right-0 flex flex-col gap-2 max-sm:gap-0">
+      {/* <div className="right-0 flex flex-col gap-2 max-sm:gap-0">
         <div className="flex gap-1">
           <input
             type="text"
@@ -20,7 +20,7 @@ const Footer = () => {
             Send
           </button>
         </div>
-      </div>
+      </div> */}
     </footer>
   );
 };
