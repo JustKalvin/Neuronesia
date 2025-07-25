@@ -267,9 +267,9 @@ const Chatbot = () => {
     formData.append("file", uploadedFile);
 
     try {
-      const tempUrls = "";
+      let tempUrls = "";
       if (analyticClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/analytic";
-      if (predictClicked) tempUrls = "";
+      if (predictClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook-test/insight";
       const response = await axios.post(tempUrls
         ,
         formData,
