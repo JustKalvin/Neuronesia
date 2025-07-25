@@ -265,53 +265,96 @@ const Chatbot = () => {
     setUploading(true); // ✅ mulai loading
     const formData = new FormData();
     formData.append("file", uploadedFile);
+    if (analyticClicked) {
+      try {
+        let tempUrls = "";
+        if (analyticClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/analytic";
+        // if (predictClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook-test/insight";
+        const response = await axios.post(tempUrls
+          ,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-    try {
-      let tempUrls = "";
-      if (analyticClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/analytic";
-      if (predictClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook-test/insight";
-      const response = await axios.post(tempUrls
-        ,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
+        const responseData = response.data;
+
+        const insight = responseData.insight;
+        const imageUrl = responseData.url;
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: prev.length + 1,
+            sender: "bot",
+            message: imageUrl,
+            type: "image",
           },
-        }
-      );
+          {
+            id: prev.length + 2,
+            sender: "bot",
+            message: insight,
+            type: "text",
+          },
+        ]);
+      } catch (error) {
+        console.error("Upload error:", error);
 
-      const responseData = response.data;
-
-      const insight = responseData.insight;
-      const imageUrl = responseData.url;
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1,
+        const errorReply = {
+          id: messages.length + 1,
           sender: "bot",
-          message: imageUrl,
-          type: "image",
-        },
-        {
-          id: prev.length + 2,
+          message: "Upload failed or response unreadable. Please try again.",
+        };
+
+        setMessages((prev) => [...prev, errorReply]);
+      } finally {
+        setUploading(false); // ✅ selesai loading
+      }
+    }
+    if (predictClicked) {
+      try {
+        let tempUrls = "https://primary-production-9ee5.up.railway.app/webhook-test/insight";
+        const response = await axios.post(tempUrls
+          ,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("response : ", response);
+        const responseData = response.data[0];
+
+        // const insight = responseData.insight;
+        const imageUrl = responseData.url;
+        console.log("imageUrl : ", imageUrl)
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: prev.length + 1,
+            sender: "bot",
+            message: imageUrl,
+            type: "text",
+          }
+        ]);
+      } catch (error) {
+        console.error("Upload error:", error);
+
+        const errorReply = {
+          id: messages.length + 1,
           sender: "bot",
-          message: insight,
-          type: "text",
-        },
-      ]);
-    } catch (error) {
-      console.error("Upload error:", error);
+          message: "Upload failed or response unreadable. Please try again.",
+        };
 
-      const errorReply = {
-        id: messages.length + 1,
-        sender: "bot",
-        message: "Upload failed or response unreadable. Please try again.",
-      };
-
-      setMessages((prev) => [...prev, errorReply]);
-    } finally {
-      setUploading(false); // ✅ selesai loading
+        setMessages((prev) => [...prev, errorReply]);
+      } finally {
+        setUploading(false); // ✅ selesai loading
+      }
     }
   };
 
