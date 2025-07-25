@@ -575,7 +575,7 @@ const Chatbot = () => {
                   className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${linearRegressionClicked ? "bg-black text-white" : "bg-white text-black"
                     }`}
                 >
-                  Linear Regression
+                  Linear Regression 2 Features
                 </button>
                 <button
                   onClick={handleLogisticRegression}
