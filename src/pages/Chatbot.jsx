@@ -314,7 +314,7 @@ const Chatbot = () => {
   const handleAnalytic = () => {
     setAnalyticClicked((prev) => !prev);
     setPredictClicked(false);
-    setAlgoClicked(false);
+    setNewsClicked(false);
 
     if (selectedMentor) {
       setActiveMentorLabel(selectedMentor);
@@ -581,46 +581,50 @@ const Chatbot = () => {
       <footer className="px-[200px] py-8 max-lg:px-[100px] max-sm:px-[40px]">
         {/* Kondisional: jika analytic aktif, tampilkan upload file */}
         {analyticClicked || predictClicked ? (
-          <div className="flex items-center gap-3">
-            <label
-              htmlFor="file-upload"
-              className="bg-white text-black px-4 py-2 rounded-lg cursor-pointer hover:bg-white hover:text-black border"
-            >
-              Choose File
-            </label>
-            <input
-              id="file-upload"
-              type="file"
-              accept=".csv"
-              className="hidden"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  setUploadedFile(file);
-                }
-              }}
-            />
-            {uploadedFile && (
-              <span className="text-gray-600">{uploadedFile.name}</span>
-            )}
-            <button
-              onClick={() => handleUploadFile()}
-              type="button"
-              disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-                uploading
-                  ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "bg-black text-white hover:bg-white hover:text-black"
-              }`}
-            >
-              {uploading ? "Analyzing Data..." : "Upload"}{" "}
-              {/* ✅ indikator loading */}
-            </button>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full">
+              <label
+                htmlFor="file-upload"
+                className="bg-white text-black px-4 py-2 rounded-lg cursor-pointer hover:bg-white hover:text-black border whitespace-nowrap"
+              >
+                Choose File
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".csv"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setUploadedFile(file);
+                  }
+                }}
+              />
+              {uploadedFile && (
+                <span className="text-gray-600 text-sm break-all">
+                  {uploadedFile.name}
+                </span>
+              )}
+              <button
+                onClick={() => handleUploadFile()}
+                type="button"
+                disabled={uploading}
+                className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${
+                  uploading
+                    ? "bg-gray-400 text-white cursor-not-allowed"
+                    : "bg-black text-white hover:bg-white hover:text-black"
+                }`}
+              >
+                {uploading ? "Analyzing Data..." : "Upload"}
+              </button>
+            </div>
+
             {algoClicked && (
-              <div>
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                 <button
                   onClick={handleLinearRegression}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${
                     linearRegressionClicked
                       ? "bg-black text-white"
                       : "bg-white text-black"
@@ -630,7 +634,7 @@ const Chatbot = () => {
                 </button>
                 <button
                   onClick={handleLogisticRegression}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${
                     logisticRegressionClicked
                       ? "bg-black text-white"
                       : "bg-white text-black"
@@ -640,7 +644,7 @@ const Chatbot = () => {
                 </button>
                 <button
                   onClick={handleClustering}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer text-sm whitespace-nowrap ${
                     clusteringClicked
                       ? "bg-black text-white"
                       : "bg-white text-black"
@@ -652,98 +656,103 @@ const Chatbot = () => {
             )}
           </div>
         ) : (
-          <div className="flex items-center gap-3">
-            {/* 🎙️ Tombol Mic */}
-            {micClicked ? (
-              <button
-                data-tutorial="mic"
-                type="button"
-                onClick={() => {
-                  handleMicClicked();
-                  handleStop();
-                }}
-                className="px-3 py-2 rounded-lg border transition-colors bg-red-500 text-white hover:bg-red-600"
-              >
-                ❌ Stop
-              </button>
-            ) : (
-              <button
-                data-tutorial="mic"
-                type="button"
-                onClick={() => {
-                  handleMicClicked();
-                  resetTranscript();
-                  handleStart();
-                }}
-                className={`px-3 py-2 rounded-lg border transition-colors ${
-                  listening
-                    ? "bg-green-500 text-white"
-                    : "bg-white text-black hover:bg-gray-100"
-                }`}
-              >
-                🎙️
-              </button>
-            )}
-
-            {/* Input text */}
-            <input
-              data-tutorial="input"
-              type="text"
-              placeholder={
-                newsClicked ? "Enter your business name" : "Ask AI..."
-              }
-              value={input}
-              onChange={(e) => {
-                setInput(e.target.value);
-                if (newsClicked) setBusinessName(e.target.value);
-              }}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              className="text-black flex-1 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-
-            <button
-              type="button"
-              onClick={handleSend}
-              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
-            >
-              Send
-            </button>
-            {newsClicked && (
-              <div className="mt-0 flex flex-col">
-                <select
-                  value={selectedSector}
-                  onChange={(e) => handleNewsSectorClick(e.target.value)}
-                  className="px-3 py-2 rounded-lg border bg-white text-black transition-colors"
+          <div className="flex flex-col gap-4">
+            {/* Main input section */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              {/* 🎙️ Tombol Mic */}
+              {micClicked ? (
+                <button
+                  data-tutorial="mic"
+                  type="button"
+                  onClick={() => {
+                    handleMicClicked();
+                    handleStop();
+                  }}
+                  className="px-3 py-2 rounded-lg border transition-colors bg-red-500 text-white hover:bg-red-600 whitespace-nowrap"
                 >
-                  <option value="">Select a sector</option>
-                  {[
-                    "trade",
-                    "industry",
-                    "agriculture",
-                    "fisheries",
-                    "finance",
-                    "tourism",
-                    "technology",
-                  ].map((sector) => (
-                    <option key={sector} value={sector}>
-                      {sector}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+                  ❌ Stop
+                </button>
+              ) : (
+                <button
+                  data-tutorial="mic"
+                  type="button"
+                  onClick={() => {
+                    handleMicClicked();
+                    resetTranscript();
+                    handleStart();
+                  }}
+                  className={`px-3 py-2 rounded-lg border transition-colors whitespace-nowrap ${
+                    listening
+                      ? "bg-green-500 text-white"
+                      : "bg-white text-black hover:bg-gray-100"
+                  }`}
+                >
+                  🎙️
+                </button>
+              )}
+
+              {/* Input text */}
+              <input
+                data-tutorial="input"
+                type="text"
+                placeholder={
+                  newsClicked ? "Enter your business name" : "Ask AI..."
+                }
+                value={input}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  if (newsClicked) setBusinessName(e.target.value);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                className="text-black flex-1 w-full sm:w-auto min-w-0 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+
+              <button
+                type="button"
+                onClick={handleSend}
+                className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer whitespace-nowrap w-full sm:w-auto"
+              >
+                Send
+              </button>
+
+              {/* News sector dropdown - moved to be inline on larger screens */}
+              {newsClicked && (
+                <div className="w-full sm:w-auto">
+                  <select
+                    value={selectedSector}
+                    onChange={(e) => handleNewsSectorClick(e.target.value)}
+                    className="px-3 py-2 rounded-lg border bg-white text-black transition-colors w-full sm:w-auto min-w-[150px]"
+                  >
+                    <option value="">Select a sector</option>
+                    {[
+                      "trade",
+                      "industry",
+                      "agriculture",
+                      "fisheries",
+                      "finance",
+                      "tourism",
+                      "technology",
+                    ].map((sector) => (
+                      <option key={sector} value={sector}>
+                        {sector.charAt(0).toUpperCase() + sector.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
         {/* Mentor dropdown + Analytics toggle */}
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <div className="relative">
+        <div className="mt-4 flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3">
+          <div className="relative w-full sm:w-auto">
             <button
-              className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer bg-white text-black"
+              className="border rounded-lg px-4 py-2 w-full sm:w-[200px] cursor-pointer bg-white text-black disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={mentorLocked || analyticClicked || predictClicked}
               onClick={() => {
-                setIsOpen(false); // ✅ close sign-out dropdown
-                setIsOpenMentor((prev) => !prev); // toggle mentor dropdown
+                setIsOpen(false);
+                setIsOpenMentor((prev) => !prev);
               }}
             >
               {selectedMentor || "Choose Mentor"}
@@ -751,7 +760,7 @@ const Chatbot = () => {
 
             {/* Dropdown that opens upward */}
             {isOpenMentor && (
-              <div className="absolute bottom-full mb-2 w-full bg-white border rounded-lg shadow-lg z-50">
+              <div className="absolute bottom-full mb-2 w-full bg-white border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
                 {[
                   {
                     value: "orang1",
@@ -771,44 +780,46 @@ const Chatbot = () => {
                 ].map((mentor) => (
                   <div
                     key={mentor.value}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    className="p-3 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
                     onClick={() => handleMentorSelect(mentor)}
                   >
-                    <p className="font-semibold">{mentor.name}</p>
-                    <p className="text-sm text-gray-500">{mentor.desc}</p>
+                    <p className="font-semibold text-sm">{mentor.name}</p>
+                    <p className="text-xs text-gray-500 mt-1">{mentor.desc}</p>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          <button
-            data-tutorial="analytics"
-            onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-              analyticClicked ? "bg-black text-white" : "bg-white text-black"
-            }`}
-          >
-            Analytics
-          </button>
-          <button
-            data-tutorial="predict"
-            onClick={handlePredict}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-              predictClicked ? "bg-black text-white" : "bg-white text-black"
-            }`}
-          >
-            Future
-          </button>
-          <button
-            data-tutorial="algo"
-            onClick={handleNews}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-              newsClicked ? "bg-black text-white" : "bg-white text-black"
-            }`}
-          >
-            News
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <button
+              data-tutorial="analytics"
+              onClick={handleAnalytic}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${
+                analyticClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
+            >
+              Analytics
+            </button>
+            <button
+              data-tutorial="predict"
+              onClick={handlePredict}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${
+                predictClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
+            >
+              Future
+            </button>
+            <button
+              data-tutorial="algo"
+              onClick={handleNews}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer whitespace-nowrap ${
+                newsClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
+            >
+              News
+            </button>
+          </div>
         </div>
       </footer>
     </div>
