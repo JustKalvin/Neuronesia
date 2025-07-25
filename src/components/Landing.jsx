@@ -16,6 +16,10 @@ import { motion, useInView } from "framer-motion";
 import { supabase } from "../lib/supabaseClient";
 import Footer from "./Footer";
 
+const MotionLink = motion(Link);
+const mentorRef = useRef(null);
+const isMentorInView = useInView(mentorRef, { once: true, margin: "-100px" });
+
 const Landing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
