@@ -8,4 +8,21 @@
 @theme {
     --font-Montserrat : Montserrat, 'sans-serif';
     --font-Roboto : Roboto, 'sans-serif';
+    --font-Poppins : Poppins, 'sans-serif';
+}
+
+.tutorial-highlight {
+  animation: pulse-highlight 2s infinite;
+}
+
+@keyframes pulse-highlight {
+  0% {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0.7), 0 0 30px rgba(59, 130, 246, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
+  }
 }

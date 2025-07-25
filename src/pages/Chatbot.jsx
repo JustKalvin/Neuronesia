@@ -14,6 +14,7 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
+import TutorialModal from "../components/TutorialModal";
 
 const Chatbot = () => {
   const {
@@ -39,6 +40,61 @@ const Chatbot = () => {
   const [micClicked, setMicClicked] = useState(false);
   // ✅ State untuk namespace Pinecone
   const [mentorCode, setMentorCode] = useState("");
+  const [showTutorial, setShowTutorial] = useState(true);
+  const [step, setStep] = useState(0);
+
+  const tutorialSteps = [
+    {
+      title: "Welcome to AI Chatbot!",
+      content:
+        "This tutorial will guide you through how to use our AI chatbot powered by voice input, document analytics, and personalized mentorship.",
+      highlight: null,
+    },
+    {
+      title: "Choose Your Mentor",
+      content:
+        "Before chatting, select a mentor from the dropdown list. Your mentor determines how the AI responds based on their philosophy and writings.",
+      highlight: "select",
+    },
+    {
+      title: "Ask Anything",
+      content:
+        "Use the input field at the bottom to type your question. Press Enter or click 'Send'. The AI will respond with insights tailored to your chosen mentor.",
+      highlight: "input",
+    },
+    {
+      title: "Use Voice Input 🎙️",
+      content:
+        "Click the mic button to speak your question. Click ❌ Stop when you're done. The transcript will appear in the input field automatically.",
+      highlight: "mic",
+    },
+    {
+      title: "Upload CSV for Insight 📊",
+      content:
+        "Click the 'Analytics' button, then upload your CSV file. The AI will analyze your data and return visual insights with interpretation.",
+      highlight: "analytics",
+    },
+    {
+      title: "Manage Your Profile",
+      content:
+        "Click your profile picture at the top right to logout. Your session and data are managed securely with Supabase.",
+      highlight: "profile",
+    },
+    {
+      title: "You're All Set!",
+      content:
+        "Now you're ready to explore mentorship, analyze data, and chat with AI in a personalized way. Enjoy the journey!",
+      highlight: null,
+    },
+  ];
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("visited");
+    if (!hasVisited) {
+      setShowTutorial(true);
+      localStorage.setItem("visited", "true");
+    }
+  }, []);
 
   const insertUser = async (id, full_name, email, avatar_url, created_at) => {
     try {
@@ -229,12 +285,20 @@ const Chatbot = () => {
   };
 
   const handleMicClicked = () => {
-    setMicClicked(micClicked => (!micClicked))
-  }
-
+    setMicClicked((micClicked) => !micClicked);
+  };
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
+      <TutorialModal
+        isOpen={showTutorial}
+        onClose={() => setShowTutorial(false)}
+        currentStep={step}
+        onNext={() => setStep((prev) => prev + 1)}
+        onPrev={() => setStep((prev) => prev - 1)}
+        totalSteps={tutorialSteps.length}
+      />
+
       {/* Header */}
       <header className="h-[80px] bg-[#FFFFFF] flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
         <Link to="/">
@@ -244,6 +308,7 @@ const Chatbot = () => {
         {/* Profile + Dropdown */}
         <div className="relative">
           <img
+            data-tutorial="profile"
             src={user?.user_metadata?.avatar_url}
             alt="profile-png"
             className="w-[45px] h-[45px] rounded-full border cursor-pointer"
@@ -262,16 +327,18 @@ const Chatbot = () => {
           )}
         </div>
       </header>
-
       <hr className="" />
-
       {/* Main Chat Area */}
-      <main className="flex-1 overflow-y-auto px-[200px] py-8 space-y-6 max-lg:px-[100px] max-sm:px-[40px]">
+      <main
+        data-tutorial="chat"
+        className="flex-1 overflow-y-auto px-[200px] py-8 space-y-6 max-lg:px-[100px] max-sm:px-[40px]"
+      >
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
-              }`}
+            className={`flex ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -290,10 +357,10 @@ const Chatbot = () => {
                         selectedMentor === "Michael E. Gerber"
                           ? michael
                           : selectedMentor === "Stephen R. Covey"
-                            ? covey
-                            : selectedMentor === "Eric Ries"
-                              ? eric
-                              : users // fallback jika belum pilih mentor
+                          ? covey
+                          : selectedMentor === "Eric Ries"
+                          ? eric
+                          : users // fallback jika belum pilih mentor
                       }
                       className="w-7 h-7 rounded-full object-cover"
                     />
@@ -304,10 +371,11 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
+                className={`rounded-lg px-5 py-3 max-w-md ${
+                  msg.sender === "user"
                     ? "bg-black text-left text-white"
                     : "bg-white text-left border-1"
-                  }`}
+                }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -327,9 +395,7 @@ const Chatbot = () => {
           <p className="text-gray-500 text-center italic">AI is typing...</p>
         )}
       </main>
-
       <hr className="" />
-
       {/* Footer Input */}
       <footer className="px-[200px] py-8 max-lg:px-[100px] max-sm:px-[40px]">
         {/* Kondisional: jika analytic aktif, tampilkan upload file */}
@@ -361,10 +427,11 @@ const Chatbot = () => {
               onClick={() => handleUploadFile()}
               type="button"
               disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                uploading
                   ? "bg-gray-400 text-white cursor-not-allowed"
                   : "bg-black text-white hover:bg-white hover:text-black"
-                }`}
+              }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
@@ -375,32 +442,38 @@ const Chatbot = () => {
             {/* 🎙️ Tombol Mic */}
             {micClicked ? (
               <button
+                data-tutorial="mic"
                 type="button"
                 onClick={() => {
                   handleMicClicked();
-                  handleStop()
+                  handleStop();
                 }}
-                className={"px-3 py-2 rounded-lg border transition-colors bg-red-500 text-white hover:bg-red-600"}
+                className="px-3 py-2 rounded-lg border transition-colors bg-red-500 text-white hover:bg-red-600"
               >
                 ❌ Stop
               </button>
             ) : (
               <button
+                data-tutorial="mic"
                 type="button"
                 onClick={() => {
-                  handleMicClicked()
+                  handleMicClicked();
                   resetTranscript();
-                  handleStart(); // ✅ panggil fungsi handleStart (pakai 'id-ID')
+                  handleStart();
                 }}
-                className={`px-3 py-2 rounded-lg border transition-colors ${listening ? "bg-green-500 text-white" : "bg-white text-black hover:bg-gray-100"}`}
-
+                className={`px-3 py-2 rounded-lg border transition-colors ${
+                  listening
+                    ? "bg-green-500 text-white"
+                    : "bg-white text-black hover:bg-gray-100"
+                }`}
               >
                 🎙️
-              </button>)}
-
+              </button>
+            )}
 
             {/* Input text */}
             <input
+              data-tutorial="input"
               type="text"
               placeholder="Ask AI..."
               value={input}
@@ -421,9 +494,10 @@ const Chatbot = () => {
         {/* Mentor dropdown + Analytics toggle */}
         <div className="mt-4 flex items-center gap-3">
           <select
+            data-tutorial="select"
             className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
             onChange={handleMentorChange}
-            disabled={mentorLocked} // ✅ lock dropdown
+            disabled={mentorLocked}
           >
             <option value="">Choose Mentor</option>
             <option value="orang1">Michael E. Gerber</option>
@@ -432,9 +506,11 @@ const Chatbot = () => {
           </select>
 
           <button
+            data-tutorial="analytics"
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              analyticClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             Analytics
           </button>
