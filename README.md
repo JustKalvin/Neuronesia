@@ -112,8 +112,7 @@ npm run dev
 ## Catatan Tambahan
 
 - Beberapa fitur (prediksi, grafik) hanya berjalan jika file CSV valid dan kolom numerik dikenali otomatis.
-- Model ML sederhana (Linear Regression) digunakan agar tetap ringan dan realtime.
-
+- 
 ---
 
 ## Credits
