@@ -11,12 +11,14 @@ import video from "../assets/video/Untitled.mp4";
 import ParticlesComponent from "../components/Particles";
 import Faq from "../components/Faq";
 import teams from "../assets/teams.jpg";
-import { motion } from "framer-motion";
+import { motion,useInView } from "framer-motion";
 
 import { supabase } from "../lib/supabaseClient";
 import Footer from "./Footer";
 
 const MotionLink = motion(Link);
+const mentorRef = useRef(null);
+const isMentorInView = useInView(mentorRef, { once: true, margin: "-100px" });
 
 const Landing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -56,7 +58,7 @@ const Landing = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             Meet Aivise!
-          </h1>
+          </motion.h1>
           <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5 max-sm:px-5">
             Your Intelligent Business Mentor
           </h3>
@@ -69,8 +71,8 @@ const Landing = () => {
           </p>
           
           
-          <div className="flex gap-4 mb-10">
-            <Link
+          <motion.div className="flex gap-4 mb-10">
+            <MotionLink
               to={isLoggedIn ? "/chatbot" : "/login"}
               className="px-6 py-2 bg-black text-white rounded-lg hover:bg-white hover:border-1 hover:text-black transition"
             >
@@ -99,8 +101,13 @@ const Landing = () => {
           </video>
         </div>
 
-        <div>
-          <h1 className="text-6xl font-bold text-center mb-5 mt-25 max-md:text-4xl max-lg:text-5xl">
+        <motion.div
+          ref={mentorRef}
+          initial={{ opacity: 0, y: 50 }}
+          animate={isMentorInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: "easeOut" }}>
+          <h1 className="text-6xl font-bold text-center mb-5 mt-25 max-md:text-4xl max-lg:text-5xl"
+          >
             Meet your mentors!
           </h1>
           <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-sm:px-5">
@@ -111,7 +118,7 @@ const Landing = () => {
             growth. This ensures that the guidance Aivise provides is rooted in
             proven principles from trusted experts across the business world.
           </p>
-        </div>
+        </motion.div>
       </div>
       <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-10 max-sm:mb-5">
         {[user1, user2, user3].map((img, index) => (
