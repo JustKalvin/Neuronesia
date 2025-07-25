@@ -305,8 +305,8 @@ const Chatbot = () => {
 
               <div
                 className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
-                  ? "bg-black text-left text-white"
-                  : "bg-white text-left border-1"
+                    ? "bg-black text-left text-white"
+                    : "bg-white text-left border-1"
                   }`}
               >
                 {msg.type === "image" ? (
@@ -362,8 +362,8 @@ const Chatbot = () => {
               type="button"
               disabled={uploading} // ✅ prevent double click
               className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
-                ? "bg-gray-400 text-white cursor-not-allowed"
-                : "bg-black text-white hover:bg-white hover:text-black"
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-white hover:text-black"
                 }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
@@ -372,7 +372,7 @@ const Chatbot = () => {
           </div>
         ) : (
           <div className="flex items-center gap-3">
-            {/* 🎙 Tombol Mic */}
+            {/* 🎙️ Tombol Mic */}
             {micClicked ? (
               <button
                 type="button"
@@ -392,56 +392,55 @@ const Chatbot = () => {
                   resetTranscript();
                   handleStart(); // ✅ panggil fungsi handleStart (pakai 'id-ID')
                 }}
-                className={px - 3 py-2 rounded-lg border transition-colors ${listening ? "bg-green-500 text-white" : "bg-white text-black hover:bg-gray-100"}}
+                className={`px-3 py-2 rounded-lg border transition-colors ${listening ? "bg-green-500 text-white" : "bg-white text-black hover:bg-gray-100"}`}
 
               >
-            🎙
-          </button>)}
+                🎙️
+              </button>)}
 
 
-        {/* Input text */}
-        <input
-          type="text"
-          placeholder="Ask AI..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          className="text-black flex-1 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-        <button
-          type="button"
-          onClick={handleSend}
-          className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
-        >
-          Send
-        </button>
+            {/* Input text */}
+            <input
+              type="text"
+              placeholder="Ask AI..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              className="text-black flex-1 border border-black-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <button
+              type="button"
+              onClick={handleSend}
+              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition-colors border-1 cursor-pointer"
+            >
+              Send
+            </button>
+          </div>
+        )}
+
+        {/* Mentor dropdown + Analytics toggle */}
+        <div className="mt-4 flex items-center gap-3">
+          <select
+            className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
+            onChange={handleMentorChange}
+            disabled={mentorLocked} // ✅ lock dropdown
+          >
+            <option value="">Choose Mentor</option>
+            <option value="orang1">Michael E. Gerber</option>
+            <option value="orang2">Stephen R. Covey</option>
+            <option value="orang3">Eric Ries</option>
+          </select>
+
+          <button
+            onClick={handleAnalytic}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
+          >
+            Analytics
+          </button>
+        </div>
+      </footer>
     </div>
-  )
-}
-
-{/* Mentor dropdown + Analytics toggle */ }
-<div className="mt-4 flex items-center gap-3">
-  <select
-    className="border rounded-lg px-4 py-2 w-[200px] cursor-pointer"
-    onChange={handleMentorChange}
-    disabled={mentorLocked} // ✅ lock dropdown
-  >
-    <option value="">Choose Mentor</option>
-    <option value="orang1">Michael E. Gerber</option>
-    <option value="orang2">Stephen R. Covey</option>
-    <option value="orang3">Eric Ries</option>
-  </select>
-
-  <button
-    onClick={handleAnalytic}
-    className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
-      }`}
-  >
-    Analytics
-  </button>
-</div>
-      </footer >
-    </div >
   );
 };
 
