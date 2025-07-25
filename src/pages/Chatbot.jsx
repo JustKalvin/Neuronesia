@@ -11,6 +11,9 @@ import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SpeechRecognition, {
+  useSpeechRecognition,
+} from "react-speech-recognition";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState(chatData);
@@ -18,7 +21,6 @@ const Chatbot = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [analyticClicked, setAnalyticClicked] = useState(false);
-
   // ✅ State untuk namespace Pinecone
   const [mentorCode, setMentorCode] = useState("");
 
@@ -108,6 +110,12 @@ const Chatbot = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (micClicked) {
+      setInput(transcript);
+    }
+  }, [transcript]);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -140,6 +148,11 @@ const Chatbot = () => {
   const handleAnalytic = () => {
     setAnalyticClicked(analyticClicked => (!analyticClicked))
   }
+
+  const handleMicClicked = () => {
+    setMicClicked(micClicked => (!micClicked))
+  }
+
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
@@ -210,8 +223,8 @@ const Chatbot = () => {
 
               <div
                 className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
-                  ? "bg-black text-left text-white"
-                  : "bg-white text-left border-1"
+                    ? "bg-black text-left text-white"
+                    : "bg-white text-left border-1"
                   }`}
               >
                 <ReactMarkdown>{msg.message}</ReactMarkdown>
@@ -253,6 +266,34 @@ const Chatbot = () => {
           </div>
         ) : (
           <div className="flex items-center gap-3">
+            {/* 🎙️ Tombol Mic */}
+            {micClicked ? (
+              <button
+                type="button"
+                onClick={() => {
+                  handleMicClicked();
+                  handleStop()
+                }}
+                className={"px-3 py-2 rounded-lg border transition-colors bg-red-500 text-white hover:bg-red-600"}
+              >
+                ❌ Stop
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  handleMicClicked()
+                  resetTranscript();
+                  handleStart(); // ✅ panggil fungsi handleStart (pakai 'id-ID')
+                }}
+                className={`px-3 py-2 rounded-lg border transition-colors ${listening ? "bg-green-500 text-white" : "bg-white text-black hover:bg-gray-100"}`}
+
+              >
+                🎙️
+              </button>)}
+
+
+            {/* Input text */}
             <input
               type="text"
               placeholder="Ask AI..."
