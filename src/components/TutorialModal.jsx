@@ -30,7 +30,7 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
       highlight: "mic",
     },
     {
-      title: "Upload CSV for Insight",
+      title: "Upload CSV for Analytics",
       content:
         "Click the 'Analytics' button, then upload your CSV file. The AI will analyze your data and return visual insights with interpretation.",
       highlight: "analytics",
