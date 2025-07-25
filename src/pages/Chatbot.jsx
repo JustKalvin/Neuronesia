@@ -46,18 +46,14 @@ const Chatbot = () => {
   const [skipTutor, setSkipTutor] = useState(true);
   const [tempUser, setTempUser] = useState(null);
   const [predictClicked, setPredictClicked] = useState(false);
-<<<<<<< Updated upstream
   const [algoClicked, setAlgoClicked] = useState(false);
   const [linearRegressionClicked, setLinearRegressionClicked] = useState(false);
   const [logisticRegressionClicked, setLogisticRegressionClicked] = useState(false);
   const [clusteringClicked, setClusteringClicked] = useState(false)
   const [isOpenMentor, setIsOpenMentor] = useState(false); // dropdown state
-=======
   const [newsClicked, setNewsClicked] = useState(false);
   const [selectedSector, setSelectedSector] = useState("");
-
->>>>>>> Stashed changes
-
+  const [businessName, setBusinessName] = useState("");
   const tutorialSteps = [
     {
       title: "Welcome to AI Chatbot!",
@@ -189,7 +185,7 @@ const Chatbot = () => {
     if (newsClicked) {
       try {
         const response = await axios.post(
-          "https://primary-production-9ee5.up.railway.app/webhook-test/news",
+          "https://primary-production-9ee5.up.railway.app/webhook/news",
           {
             message: input,
             sector: selectedSector,
@@ -201,11 +197,13 @@ const Chatbot = () => {
           }
         );
 
+        console.log("response: ", response.data); // Cek isi response untuk debugging
+
         const botReply = {
           id: messages.length + 2,
           sender: "bot",
-          message: response.data.output.response || "No response from server",
-          displayName: selectedMentor || "AI Advisor", // ← Tambahkan ini
+          message: response?.data?.[0]?.output?.response || "No response from server",
+          displayName: selectedMentor || "AI Advisor",
         };
 
         setMessages((prev) => [...prev, botReply]);
@@ -221,6 +219,7 @@ const Chatbot = () => {
         setLoading(false);
       }
     }
+
     else {
       try {
         const response = await axios.post(
@@ -239,7 +238,7 @@ const Chatbot = () => {
         const botReply = {
           id: messages.length + 2,
           sender: "bot",
-          message: response.data.output.response || "No response from server",
+          message: response?.data?.output?.response || "No response from server",
           displayName: selectedMentor || "AI Advisor", // ← Tambahkan ini
         };
 
@@ -314,13 +313,8 @@ const Chatbot = () => {
   const handleAnalytic = () => {
     setAnalyticClicked((prev) => !prev);
     setPredictClicked(false);
-<<<<<<< Updated upstream
     setAlgoClicked(false);
 
-=======
-    setNewsClicked(false);
-    // Simpan label mentor aktif sebelum reset
->>>>>>> Stashed changes
     if (selectedMentor) {
       setActiveMentorLabel(selectedMentor);
       setMentorLocked(true);
@@ -617,35 +611,34 @@ const Chatbot = () => {
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
             </button>
-<<<<<<< Updated upstream
-            {algoClicked && (
-              <div>
-                <button
-                  onClick={handleLinearRegression}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${linearRegressionClicked ? "bg-black text-white" : "bg-white text-black"
-                    }`}
-                >
-                  Linear Regression 2 Features
-                </button>
-                <button
-                  onClick={handleLogisticRegression}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${logisticRegressionClicked ? "bg-black text-white" : "bg-white text-black"
-                    }`}
-                >
-                  Logistic Regression
-                </button>
-                <button
-                  onClick={handleClustering}
-                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${clusteringClicked ? "bg-black text-white" : "bg-white text-black"
-                    }`}
-                >
-                  Clustering
-                </button>
-              </div>
-            )}
-=======
->>>>>>> Stashed changes
-          </div>
+            {
+              algoClicked && (
+                <div>
+                  <button
+                    onClick={handleLinearRegression}
+                    className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${linearRegressionClicked ? "bg-black text-white" : "bg-white text-black"
+                      }`}
+                  >
+                    Linear Regression 2 Features
+                  </button>
+                  <button
+                    onClick={handleLogisticRegression}
+                    className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${logisticRegressionClicked ? "bg-black text-white" : "bg-white text-black"
+                      }`}
+                  >
+                    Logistic Regression
+                  </button>
+                  <button
+                    onClick={handleClustering}
+                    className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${clusteringClicked ? "bg-black text-white" : "bg-white text-black"
+                      }`}
+                  >
+                    Clustering
+                  </button>
+                </div>
+              )
+            }
+          </div >
         ) : (
           <div className="flex items-center gap-3">
             {/* 🎙️ Tombol Mic */}
@@ -789,8 +782,8 @@ const Chatbot = () => {
             News
           </button>
         </div>
-      </footer>
-    </div>
+      </footer >
+    </div >
   );
 };
 
