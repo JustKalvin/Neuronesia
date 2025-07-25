@@ -86,17 +86,8 @@ const Landing = () => {
               to={isLoggedIn ? "/chatbot" : "/login"}
               className="px-6 py-2 bg-black text-white rounded-lg hover:bg-white hover:border-1 hover:text-black transition"
             >
-              Get Started
+              Use Aivise!
             </Link>
-
-            <a
-              href="/docs" // or your actual documentation route
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-2 border border-black text-black rounded-lg hover:bg-black hover:text-white hover:border-white hover:border-1 transition"
-            >
-              See Documentation
-            </a>
           </div>
         </div>
         <div className="px-[50px] md:px-[200px] xl:mt-15 rounded">
