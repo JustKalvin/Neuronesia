@@ -60,10 +60,7 @@ export const insertUser = async (
 };
 
 export const updateUser = async (
-  id: string,
-  full_name: string,
-  email: string,
-  avatar_url: string
+  id: string, skip_tutor: boolean
 ): Promise<Result<users>> => {
   const { data, error } = await supabase
     .from("users")
@@ -76,7 +73,7 @@ export const updateUser = async (
     return { success: false, message: "DATA NOT EXISTS!" };
 
   const { data: updateData, error: updateError } = await supabase
-    .from("users").update({ full_name: full_name, email: email, avatar_url: avatar_url }).eq("id", id).select()
+    .from("users").update({ skip_tutor: skip_tutor }).eq("id", id).select()
 
   if (updateError) return { success: false, message: updateError.message };
   if (!updateData || updateData.length === 0)

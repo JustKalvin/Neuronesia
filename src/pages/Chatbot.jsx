@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import axios from "axios";
 import Logo from "../assets/logo/Aivise-Logo.png";
 import chatData from "../data/chatData.json";
@@ -15,6 +15,7 @@ import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import TutorialModal from "../components/TutorialModal";
+import { updateUser, getUsersById } from "../query"
 
 const Chatbot = () => {
   const {
@@ -42,6 +43,9 @@ const Chatbot = () => {
   const [mentorCode, setMentorCode] = useState("");
   const [showTutorial, setShowTutorial] = useState(true);
   const [step, setStep] = useState(0);
+  const [skipTutor, setSkipTutor] = useState(true);
+  const [tempUser, setTempUser] = useState(null);
+  const [predictClicked, setPredictClicked] = useState(false);
 
   const tutorialSteps = [
     {
@@ -75,6 +79,12 @@ const Chatbot = () => {
       highlight: "analytics",
     },
     {
+      title: "Upload CSV for Future Prediction 🔮",
+      content:
+        "Click the 'Predict' button, then upload your CSV file. The AI will analyze your data and generate future business predictions with clear explanations.",
+      highlight: "predict",
+    },
+    {
       title: "Manage Your Profile",
       content:
         "Click your profile picture at the top right to logout. Your session and data are managed securely with Supabase.",
@@ -87,6 +97,18 @@ const Chatbot = () => {
       highlight: null,
     },
   ];
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (user) {
+        const result = await getUsersById(user.id)
+        console.log(result)
+        setSkipTutor(skipTutor => result.data.skip_tutor)
+      }
+    }
+    fetch()
+  }, [user])
+
 
   useEffect(() => {
     const hasVisited = localStorage.getItem("visited");
@@ -224,7 +246,13 @@ const Chatbot = () => {
 
   const handleAnalytic = () => {
     setAnalyticClicked((analyticClicked) => !analyticClicked);
+    setPredictClicked(predictClicked => false);
   };
+
+  const handlePredict = () => {
+    setPredictClicked(predictClicked => (!predictClicked));
+    setAnalyticClicked(analyticClicked => false);
+  }
 
   const [uploading, setUploading] = useState(false);
 
@@ -239,8 +267,11 @@ const Chatbot = () => {
     formData.append("file", uploadedFile);
 
     try {
-      const response = await axios.post(
-        "https://primary-production-9ee5.up.railway.app/webhook/analytic",
+      const tempUrls = "";
+      if (analyticClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/analytic";
+      if (predictClicked) tempUrls = "";
+      const response = await axios.post(tempUrls
+        ,
         formData,
         {
           headers: {
@@ -290,15 +321,17 @@ const Chatbot = () => {
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
-      <TutorialModal
-        isOpen={showTutorial}
-        onClose={() => setShowTutorial(false)}
-        currentStep={step}
-        onNext={() => setStep((prev) => prev + 1)}
-        onPrev={() => setStep((prev) => prev - 1)}
-        totalSteps={tutorialSteps.length}
-      />
-
+      {(user && !skipTutor) && (
+        <TutorialModal
+          isOpen={showTutorial}
+          onClose={() => setShowTutorial(false)}
+          currentStep={step}
+          onNext={() => setStep((prev) => prev + 1)}
+          onPrev={() => setStep((prev) => prev - 1)}
+          totalSteps={tutorialSteps.length}
+          user={user}
+        />
+      )}
       {/* Header */}
       <header className="h-[80px] bg-[#FFFFFF] flex items-center px-[100px] max-sm:px-[40px] justify-between relative">
         <Link to="/">
@@ -336,9 +369,8 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+              }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -357,10 +389,10 @@ const Chatbot = () => {
                         selectedMentor === "Michael E. Gerber"
                           ? michael
                           : selectedMentor === "Stephen R. Covey"
-                          ? covey
-                          : selectedMentor === "Eric Ries"
-                          ? eric
-                          : users // fallback jika belum pilih mentor
+                            ? covey
+                            : selectedMentor === "Eric Ries"
+                              ? eric
+                              : users // fallback jika belum pilih mentor
                       }
                       className="w-7 h-7 rounded-full object-cover"
                     />
@@ -371,11 +403,10 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${
-                  msg.sender === "user"
-                    ? "bg-black text-left text-white"
-                    : "bg-white text-left border-1"
-                }`}
+                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
+                  ? "bg-black text-left text-white"
+                  : "bg-white text-left border-1"
+                  }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -399,7 +430,7 @@ const Chatbot = () => {
       {/* Footer Input */}
       <footer className="px-[200px] py-8 max-lg:px-[100px] max-sm:px-[40px]">
         {/* Kondisional: jika analytic aktif, tampilkan upload file */}
-        {analyticClicked ? (
+        {analyticClicked || predictClicked ? (
           <div className="flex items-center gap-3">
             <label
               htmlFor="file-upload"
@@ -427,11 +458,10 @@ const Chatbot = () => {
               onClick={() => handleUploadFile()}
               type="button"
               disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-                uploading
-                  ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "bg-black text-white hover:bg-white hover:text-black"
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-black text-white hover:bg-white hover:text-black"
+                }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
@@ -461,11 +491,10 @@ const Chatbot = () => {
                   resetTranscript();
                   handleStart();
                 }}
-                className={`px-3 py-2 rounded-lg border transition-colors ${
-                  listening
-                    ? "bg-green-500 text-white"
-                    : "bg-white text-black hover:bg-gray-100"
-                }`}
+                className={`px-3 py-2 rounded-lg border transition-colors ${listening
+                  ? "bg-green-500 text-white"
+                  : "bg-white text-black hover:bg-gray-100"
+                  }`}
               >
                 🎙️
               </button>
@@ -508,18 +537,16 @@ const Chatbot = () => {
           <button
             data-tutorial="analytics"
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-              analyticClicked ? "bg-black text-white" : "bg-white text-black"
-            }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
           >
             Analytics
           </button>
           <button
-            data-tutorial="analytics"
-            onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-              analyticClicked ? "bg-black text-white" : "bg-white text-black"
-            }`}
+            data-tutorial="predict"
+            onClick={handlePredict}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${predictClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
           >
             Future Prediction
           </button>

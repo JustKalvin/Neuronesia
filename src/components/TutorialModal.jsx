@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { updateUser } from "../query";
 
-const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalSteps }) => {
+const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalSteps, user }) => {
   const [highlightedElement, setHighlightedElement] = useState(null);
 
   const steps = [
     {
-      title: "Welcome to AI Chatbot!",
+      title: "Welcome to Aivise!",
       content:
         "This tutorial will guide you through how to use our AI chatbot powered by voice input, document analytics, and personalized mentorship.",
       highlight: null,
@@ -33,6 +34,12 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
       content:
         "Click the 'Analytics' button, then upload your CSV file. The AI will analyze your data and return visual insights with interpretation.",
       highlight: "analytics",
+    },
+    {
+      title: "Upload CSV for Future Prediction 🔮",
+      content:
+        "Click the 'Predict' button, then upload your CSV file. The AI will analyze your data and generate future business predictions with clear explanations.",
+      highlight: "predict",
     },
     {
       title: "Manage Your Profile",
@@ -71,12 +78,12 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
       element.style.boxShadow = '0 0 0 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.5)';
       element.style.borderRadius = '8px';
       setHighlightedElement(element);
-      
+
       // Scroll element into view if needed
-      element.scrollIntoView({ 
-        behavior: 'smooth', 
+      element.scrollIntoView({
+        behavior: 'smooth',
         block: 'center',
-        inline: 'center' 
+        inline: 'center'
       });
     }
   };
@@ -115,6 +122,14 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
 
   const currentStepData = steps[currentStep];
 
+  const handleFinish = () => {
+    if (user && user.id) {
+      updateUser(user.id, true); // panggil updateUser dengan user.id dan true
+    }
+    onClose(); // tutup modal
+  };
+
+
   return (
     <>
       {/* Overlay with cutout for highlighted element */}
@@ -132,9 +147,8 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
               {steps.map((_, index) => (
                 <div
                   key={index}
-                  className={`w-2 h-2 rounded-full ${
-                    index === currentStep ? 'bg-black' : 'bg-gray-300'
-                  }`}
+                  className={`w-2 h-2 rounded-full ${index === currentStep ? 'bg-black' : 'bg-gray-300'
+                    }`}
                 />
               ))}
             </div>
@@ -146,7 +160,7 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
           <h2 className="text-xl font-bold mb-4 text-gray-800">
             {currentStepData.title}
           </h2>
-          
+
           <p className="text-gray-700 mb-6 leading-relaxed">
             {currentStepData.content}
           </p>
@@ -169,7 +183,7 @@ const TutorialModal = ({ isOpen, onClose, currentStep, onNext, onPrev, totalStep
               </button>
             ) : (
               <button
-                onClick={onClose}
+                onClick={handleFinish}
                 className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors"
               >
                 Finish
