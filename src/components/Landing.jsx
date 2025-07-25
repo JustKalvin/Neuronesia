@@ -16,10 +16,6 @@ import { motion,useInView } from "framer-motion";
 import { supabase } from "../lib/supabaseClient";
 import Footer from "./Footer";
 
-const MotionLink = motion(Link);
-const mentorRef = useRef(null);
-const isMentorInView = useInView(mentorRef, { once: true, margin: "-100px" });
-
 const Landing = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -59,35 +55,47 @@ const Landing = () => {
           >
             Meet Aivise!
           </motion.h1>
-          <h3 className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5 max-sm:px-5">
+
+          <motion.h3
+            className="text-3xl font-bold mb-4 text-center font-Montserrat max-md:text-2xl max-lg:text-2xl max-md:px-5 max-sm:px-5"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             Your Intelligent Business Mentor
-          </h3>
-          <p className="text-md mb-6 text-center max-w-2xl font-Poppins max-md:px-5 max-sm:px-5">
+          </motion.h3>
+          <motion.p
+            className="text-md mb-6 text-center max-w-2xl font-Poppins max-md:px-5 max-sm:px-5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
             Aivise is an AI mentor built to help business owners by providing
             advice grounded in real books from expert authors. Instead of giving
             generic answers, Aivise learns directly from trusted business
             literature to offer practical, proven insights tailored to your
             needs.
-          </p>
-          
-          
-          <motion.div className="flex gap-4 mb-10">
-            <MotionLink
+          </motion.p>
+
+          <div className="flex gap-4 mb-10">
+            <Link
               to={isLoggedIn ? "/chatbot" : "/login"}
               className="px-6 py-2 bg-black text-white rounded-lg hover:bg-white hover:border-1 hover:text-black transition"
             >
               Get Started
-            </MotionLink>
+            </Link>
 
-            <motion.a
+            <a
               href="/docs" // or your actual documentation route
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-2 border border-black text-black rounded-lg hover:bg-black hover:text-white hover:border-white hover:border-1 transition"
             >
               See Documentation
-            </motion.a>
-          </motion.div>
+            </a>
+          </div>
+          
+          
         </div>
         <div className="px-[50px] md:px-[200px] xl:mt-15 rounded">
           <video
@@ -121,28 +129,22 @@ const Landing = () => {
         </motion.div>
       </div>
       <div className="mx-auto p-8 flex flex-wrap justify-center gap-4 mb-10 max-sm:mb-5">
-        {[user1, user2, user3].map((img, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 1 + index * 0.3 }}
-          >
-            <Card
-              image={img}
-              name={
-                index === 0
-                  ? "Michael E. Gerber"
-                  : index === 1
-                  ? "Stephen R. Covey"
-                  : "Eric Ries"
-              }
-              description="Known For ..."
-            />
-          </motion.div>
-        ))}
+        <Card
+          image={user1}
+          name="Michael E. Gerber"
+          description="Known For Renowned small business consultant and author, described by Inc. Magazine as 'The World's #1 Small Business Guru.'"
+        />
+        <Card
+          image={user2}
+          name="Stephen R. Covey"
+          description="Known For Global leadership thinker, bestselling author, and founder of Covey Leadership Center."
+        />
+        <Card
+          image={user3}
+          name="Eric Ries"
+          description="Known For Creator of the Lean Startup methodology and advisor to technology startups."
+        />
       </div>
-
       <Faq />
 
       <h1 className="text-6xl font-bold m-10 text-center font-Montserrat max-md:text-4xl max-lg:text-5xl">
