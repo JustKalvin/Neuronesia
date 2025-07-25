@@ -46,6 +46,11 @@ const Chatbot = () => {
   const [skipTutor, setSkipTutor] = useState(true);
   const [tempUser, setTempUser] = useState(null);
   const [predictClicked, setPredictClicked] = useState(false);
+  const [algoClicked, setAlgoClicked] = useState(false);
+  const [linearRegressionClicked, setLinearRegressionClicked] = useState(false);
+  const [logisticRegressionClicked, setLogisticRegressionClicked] = useState(false);
+  const [clusteringClicked, setClusteringClicked] = useState(false)
+
 
   const tutorialSteps = [
     {
@@ -251,7 +256,7 @@ const Chatbot = () => {
   const handleAnalytic = () => {
     setAnalyticClicked((analyticClicked) => !analyticClicked);
     setPredictClicked(false);
-
+    setAlgoClicked(false);
     // Simpan label mentor aktif sebelum reset
     if (selectedMentor) {
       setActiveMentorLabel(selectedMentor);
@@ -266,6 +271,7 @@ const Chatbot = () => {
   const handlePredict = () => {
     setPredictClicked((predictClicked) => !predictClicked);
     setAnalyticClicked(false);
+    setAlgoClicked(false);
 
     if (selectedMentor) {
       setActiveMentorLabel(selectedMentor);
@@ -276,6 +282,37 @@ const Chatbot = () => {
     setMentorLocked(false);
   };
 
+  const handleAlgo = () => {
+    setAlgoClicked((algoClicked) => !algoClicked);
+    setAnalyticClicked(false);
+    setPredictClicked(false);
+
+    if (selectedMentor) {
+      setActiveMentorLabel(selectedMentor);
+    }
+
+    setMentorCode("");
+    setSelectedMentor("");
+    setMentorLocked(false);
+  };
+
+  const handleLinearRegression = () => {
+    setLinearRegressionClicked(linearRegressionClicked => !linearRegressionClicked);
+    setLogisticRegressionClicked(logisticRegressionClicked => false);
+    setClusteringClicked(clusteringClicked => false);
+  }
+
+  const handleLogisticRegression = () => {
+    setLogisticRegressionClicked(logisticRegressionClicked => !logisticRegressionClicked);
+    setLinearRegressionClicked(linearRegressionClicked => false);
+    setClusteringClicked(clusteringClicked => false)
+  }
+
+  const handleClustering = () => {
+    setClusteringClicked(clusteringClicked => !clusteringClicked);
+    setLinearRegressionClicked(linearRegressionClicked => false);
+    setLogisticRegressionClicked(logisticRegressionClicked => false);
+  }
   const [uploading, setUploading] = useState(false);
 
   const handleUploadFile = async () => {
@@ -432,9 +469,8 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+              }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -454,10 +490,10 @@ const Chatbot = () => {
                         msg.displayName === "Michael E. Gerber"
                           ? michael
                           : msg.displayName === "Stephen R. Covey"
-                          ? covey
-                          : msg.displayName === "Eric Ries"
-                          ? eric
-                          : users
+                            ? covey
+                            : msg.displayName === "Eric Ries"
+                              ? eric
+                              : users
                       }
                       alt="bot-avatar"
                     />
@@ -468,11 +504,10 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${
-                  msg.sender === "user"
-                    ? "bg-black text-left text-white"
-                    : "bg-white text-left border-1"
-                }`}
+                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
+                  ? "bg-black text-left text-white"
+                  : "bg-white text-left border-1"
+                  }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -498,7 +533,7 @@ const Chatbot = () => {
       {/* Footer Input */}
       <footer className="px-[200px] py-8 max-lg:px-[100px] max-sm:px-[40px]">
         {/* Kondisional: jika analytic aktif, tampilkan upload file */}
-        {analyticClicked || predictClicked ? (
+        {analyticClicked || predictClicked || algoClicked ? (
           <div className="flex items-center gap-3">
             <label
               htmlFor="file-upload"
@@ -521,20 +556,43 @@ const Chatbot = () => {
             {uploadedFile && (
               <span className="text-gray-600">{uploadedFile.name}</span>
             )}
-
             <button
               onClick={() => handleUploadFile()}
               type="button"
               disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-                uploading
-                  ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "bg-black text-white hover:bg-white hover:text-black"
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
+                ? "bg-gray-400 text-white cursor-not-allowed"
+                : "bg-black text-white hover:bg-white hover:text-black"
+                }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
             </button>
+            {algoClicked && (
+              <div>
+                <button
+                  onClick={handleLinearRegression}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${linearRegressionClicked ? "bg-black text-white" : "bg-white text-black"
+                    }`}
+                >
+                  Linear Regression
+                </button>
+                <button
+                  onClick={handleLogisticRegression}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${logisticRegressionClicked ? "bg-black text-white" : "bg-white text-black"
+                    }`}
+                >
+                  Logistic Regression
+                </button>
+                <button
+                  onClick={handleClustering}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${clusteringClicked ? "bg-black text-white" : "bg-white text-black"
+                    }`}
+                >
+                  Clustering
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <div className="flex items-center gap-3">
@@ -560,11 +618,10 @@ const Chatbot = () => {
                   resetTranscript();
                   handleStart();
                 }}
-                className={`px-3 py-2 rounded-lg border transition-colors ${
-                  listening
-                    ? "bg-green-500 text-white"
-                    : "bg-white text-black hover:bg-gray-100"
-                }`}
+                className={`px-3 py-2 rounded-lg border transition-colors ${listening
+                  ? "bg-green-500 text-white"
+                  : "bg-white text-black hover:bg-gray-100"
+                  }`}
               >
                 🎙️
               </button>
@@ -602,8 +659,8 @@ const Chatbot = () => {
                 ? selectedMentor === "Michael E. Gerber"
                   ? "orang1"
                   : selectedMentor === "Stephen R. Covey"
-                  ? "orang2"
-                  : "orang3"
+                    ? "orang2"
+                    : "orang3"
                 : ""
             } // ensure controlled
           >
@@ -616,20 +673,26 @@ const Chatbot = () => {
           <button
             data-tutorial="analytics"
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-              analyticClicked ? "bg-black text-white" : "bg-white text-black"
-            }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
           >
             Analytics
           </button>
           <button
             data-tutorial="predict"
             onClick={handlePredict}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
-              predictClicked ? "bg-black text-white" : "bg-white text-black"
-            }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${predictClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
           >
-            Future Prediction
+            Future
+          </button>
+          <button
+            data-tutorial="algo"
+            onClick={handleAlgo}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${algoClicked ? "bg-black text-white" : "bg-white text-black"
+              }`}
+          >
+            Algorithm
           </button>
         </div>
       </footer>
