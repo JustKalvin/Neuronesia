@@ -48,8 +48,9 @@ const Chatbot = () => {
   const [predictClicked, setPredictClicked] = useState(false);
   const [algoClicked, setAlgoClicked] = useState(false);
   const [linearRegressionClicked, setLinearRegressionClicked] = useState(false);
-  const [logisticRegressionClicked, setLogisticRegressionClicked] = useState(false);
-  const [clusteringClicked, setClusteringClicked] = useState(false)
+  const [logisticRegressionClicked, setLogisticRegressionClicked] =
+    useState(false);
+  const [clusteringClicked, setClusteringClicked] = useState(false);
   const [isOpenMentor, setIsOpenMentor] = useState(false); // dropdown state
   const [newsClicked, setNewsClicked] = useState(false);
   const [selectedSector, setSelectedSector] = useState("");
@@ -149,7 +150,7 @@ const Chatbot = () => {
 
   const handleMentorSelect = (mentor) => {
     setIsOpenMentor(false); // close mentor dropdown
-    setIsOpen(false);       // close profile dropdown if open
+    setIsOpen(false); // close profile dropdown if open
     setSelectedMentor(mentor.name);
     setActiveMentorLabel(mentor.name);
 
@@ -202,7 +203,8 @@ const Chatbot = () => {
         const botReply = {
           id: messages.length + 2,
           sender: "bot",
-          message: response?.data?.[0]?.output?.response || "No response from server",
+          message:
+            response?.data?.[0]?.output?.response || "No response from server",
           displayName: selectedMentor || "AI Advisor",
         };
 
@@ -218,9 +220,7 @@ const Chatbot = () => {
       } finally {
         setLoading(false);
       }
-    }
-
-    else {
+    } else {
       try {
         const response = await axios.post(
           "https://primary-production-9ee5.up.railway.app/webhook/bookrag",
@@ -238,7 +238,8 @@ const Chatbot = () => {
         const botReply = {
           id: messages.length + 2,
           sender: "bot",
-          message: response?.data?.output?.response || "No response from server",
+          message:
+            response?.data?.output?.response || "No response from server",
           displayName: selectedMentor || "AI Advisor", // ← Tambahkan ini
         };
 
@@ -367,7 +368,8 @@ const Chatbot = () => {
     if (analyticClicked) {
       try {
         let tempUrls = "";
-        tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/analytic";
+        tempUrls =
+          "https://primary-production-9ee5.up.railway.app/webhook/analytic";
         // if (predictClicked) tempUrls = "https://primary-production-9ee5.up.railway.app/webhook-test/insight";
         const response = await axios.post(tempUrls, formData, {
           headers: {
@@ -458,9 +460,9 @@ const Chatbot = () => {
   };
 
   const handleNewsSectorClick = (sector) => {
-    if (selectedSector == sector) setSelectedSector(selectedSector => (""))
-    else setSelectedSector(selectedSector => (sector));
-  }
+    if (selectedSector == sector) setSelectedSector((selectedSector) => "");
+    else setSelectedSector((selectedSector) => sector);
+  };
 
   return (
     <div className="bg-[#FFFFFF] h-screen flex flex-col justify-between font-Poppins">
@@ -512,8 +514,9 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
-              }`}
+            className={`flex ${
+              msg.sender === "user" ? "justify-end" : "justify-start"
+            }`}
           >
             <div className="flex flex-col gap-3">
               <div className="flex gap-3 items-center">
@@ -533,10 +536,10 @@ const Chatbot = () => {
                         msg.displayName === "Michael E. Gerber"
                           ? michael
                           : msg.displayName === "Stephen R. Covey"
-                            ? covey
-                            : msg.displayName === "Eric Ries"
-                              ? eric
-                              : users
+                          ? covey
+                          : msg.displayName === "Eric Ries"
+                          ? eric
+                          : users
                       }
                       alt="bot-avatar"
                     />
@@ -547,10 +550,11 @@ const Chatbot = () => {
               </div>
 
               <div
-                className={`rounded-lg px-5 py-3 max-w-md ${msg.sender === "user"
-                  ? "bg-black text-left text-white"
-                  : "bg-white text-left border-1"
-                  }`}
+                className={`rounded-lg px-5 py-3 max-w-md ${
+                  msg.sender === "user"
+                    ? "bg-black text-left text-white"
+                    : "bg-white text-left border-1"
+                }`}
               >
                 {msg.type === "image" ? (
                   <img
@@ -603,42 +607,50 @@ const Chatbot = () => {
               onClick={() => handleUploadFile()}
               type="button"
               disabled={uploading} // ✅ prevent double click
-              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${uploading
-                ? "bg-gray-400 text-white cursor-not-allowed"
-                : "bg-black text-white hover:bg-white hover:text-black"
-                }`}
+              className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                uploading
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-white hover:text-black"
+              }`}
             >
               {uploading ? "Analyzing Data..." : "Upload"}{" "}
               {/* ✅ indikator loading */}
             </button>
-            {
-              algoClicked && (
-                <div>
-                  <button
-                    onClick={handleLinearRegression}
-                    className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${linearRegressionClicked ? "bg-black text-white" : "bg-white text-black"
-                      }`}
-                  >
-                    Linear Regression 2 Features
-                  </button>
-                  <button
-                    onClick={handleLogisticRegression}
-                    className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${logisticRegressionClicked ? "bg-black text-white" : "bg-white text-black"
-                      }`}
-                  >
-                    Logistic Regression
-                  </button>
-                  <button
-                    onClick={handleClustering}
-                    className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${clusteringClicked ? "bg-black text-white" : "bg-white text-black"
-                      }`}
-                  >
-                    Clustering
-                  </button>
-                </div>
-              )
-            }
-          </div >
+            {algoClicked && (
+              <div>
+                <button
+                  onClick={handleLinearRegression}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                    linearRegressionClicked
+                      ? "bg-black text-white"
+                      : "bg-white text-black"
+                  }`}
+                >
+                  Linear Regression 2 Features
+                </button>
+                <button
+                  onClick={handleLogisticRegression}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                    logisticRegressionClicked
+                      ? "bg-black text-white"
+                      : "bg-white text-black"
+                  }`}
+                >
+                  Logistic Regression
+                </button>
+                <button
+                  onClick={handleClustering}
+                  className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+                    clusteringClicked
+                      ? "bg-black text-white"
+                      : "bg-white text-black"
+                  }`}
+                >
+                  Clustering
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <div className="flex items-center gap-3">
             {/* 🎙️ Tombol Mic */}
@@ -663,10 +675,11 @@ const Chatbot = () => {
                   resetTranscript();
                   handleStart();
                 }}
-                className={`px-3 py-2 rounded-lg border transition-colors ${listening
-                  ? "bg-green-500 text-white"
-                  : "bg-white text-black hover:bg-gray-100"
-                  }`}
+                className={`px-3 py-2 rounded-lg border transition-colors ${
+                  listening
+                    ? "bg-green-500 text-white"
+                    : "bg-white text-black hover:bg-gray-100"
+                }`}
               >
                 🎙️
               </button>
@@ -676,7 +689,9 @@ const Chatbot = () => {
             <input
               data-tutorial="input"
               type="text"
-              placeholder={newsClicked ? "Enter your business name" : "Ask AI..."}
+              placeholder={
+                newsClicked ? "Enter your business name" : "Ask AI..."
+              }
               value={input}
               onChange={(e) => {
                 setInput(e.target.value);
@@ -694,17 +709,27 @@ const Chatbot = () => {
               Send
             </button>
             {newsClicked && (
-              <div className="flex flex-wrap gap-2 mt-4">
-                {["trade", "industry", "agriculture", "fisheries", "finance", "tourism", "technology"].map((sector) => (
-                  <button
-                    key={sector}
-                    onClick={() => handleNewsSectorClick(sector)}
-                    className={`px-3 py-2 rounded-lg border transition-colors ${selectedSector === sector ? "bg-black text-white" : "bg-white text-black"
-                      }`}
-                  >
-                    {sector}
-                  </button>
-                ))}
+              <div className="mt-0 flex flex-col">
+                <select
+                  value={selectedSector}
+                  onChange={(e) => handleNewsSectorClick(e.target.value)}
+                  className="px-3 py-2 rounded-lg border bg-white text-black transition-colors"
+                >
+                  <option value="">Select a sector</option>
+                  {[
+                    "trade",
+                    "industry",
+                    "agriculture",
+                    "fisheries",
+                    "finance",
+                    "tourism",
+                    "technology",
+                  ].map((sector) => (
+                    <option key={sector} value={sector}>
+                      {sector}
+                    </option>
+                  ))}
+                </select>
               </div>
             )}
           </div>
@@ -760,30 +785,33 @@ const Chatbot = () => {
           <button
             data-tutorial="analytics"
             onClick={handleAnalytic}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${analyticClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              analyticClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             Analytics
           </button>
           <button
             data-tutorial="predict"
             onClick={handlePredict}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${predictClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              predictClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             Future
           </button>
           <button
             data-tutorial="algo"
             onClick={handleNews}
-            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${newsClicked ? "bg-black text-white" : "bg-white text-black"
-              }`}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              newsClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
           >
             News
           </button>
         </div>
-      </footer >
-    </div >
+      </footer>
+    </div>
   );
 };
 
