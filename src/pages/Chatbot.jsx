@@ -316,7 +316,7 @@ const Chatbot = () => {
     }
     if (predictClicked) {
       try {
-        let tempUrls = "https://primary-production-9ee5.up.railway.app/webhook-test/insight";
+        let tempUrls = "https://primary-production-9ee5.up.railway.app/webhook/insight";
         const response = await axios.post(tempUrls
           ,
           formData,
