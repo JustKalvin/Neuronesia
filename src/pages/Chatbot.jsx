@@ -514,6 +514,15 @@ const Chatbot = () => {
           >
             Analytics
           </button>
+          <button
+            data-tutorial="analytics"
+            onClick={handleAnalytic}
+            className={`px-4 py-2 rounded-lg transition-colors border-1 cursor-pointer ${
+              analyticClicked ? "bg-black text-white" : "bg-white text-black"
+            }`}
+          >
+            Future Prediction
+          </button>
         </div>
       </footer>
     </div>
