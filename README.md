@@ -4,14 +4,14 @@
 
 ---
 
-## 🚀 Fitur Utama
+## Fitur Utama
 
-### 1. 🧠 AI Chatbot dengan Mentor Personal
+### 1. AI Chatbot dengan Mentor Personal
 - Pilih mentor (Michael Gerber, Stephen Covey, Eric Ries) yang akan memengaruhi gaya dan isi jawaban AI.
 - Setiap mentor memiliki `mentorCode` unik (ex: `EMYTH`, `7HABITS`, `LEAN`).
 - Gunakan input teks atau suara (Speech Recognition support).
 
-### 2. 📊 Analisis Otomatis dari File CSV
+### 2. Analisis Otomatis dari File CSV
 - Upload file CSV via form.
 - Lakukan:
   - Statistik deskriptif (min, mean, max, median, variance, range).
@@ -19,17 +19,17 @@
   - Insight otomatis (dengan AI Agent).
   - Prediksi regresi linear.
 
-### 3. 📈 Prediksi Bisnis
+### 3. Prediksi Bisnis
 - Model Linear Regression akan memprediksi kolom seperti `Profit` atau `GrowthRate`.
 - Model dilatih secara dinamis di n8n tanpa menyimpan model secara berat di frontend.
 
-### 4. 📚 Tutorial Interaktif
+### 4. Tutorial Interaktif
 - Modal tutorial berbasis langkah (`TutorialModal`) muncul otomatis untuk pengguna baru.
 - Highlight elemen tertentu (dropdown, input, mic) untuk onboarding yang intuitif.
 
 ---
 
-## 🧩 Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 - **Frontend:** ReactJS, TailwindCSS
 - **Backend Workflow:** [n8n.io](https://n8n.io/)
@@ -41,7 +41,7 @@
 
 ---
 
-## 📁 Struktur Folder Utama
+## Struktur Folder Utama
 
 ```
 /frontend
@@ -63,7 +63,7 @@
 
 ---
 
-## 🔄 Alur Kerja (n8n)
+## Alur Kerja (n8n)
 
 1. **Form Submission**
    - File CSV diterima → dibaca sebagai binary → diubah ke JSON.
@@ -76,7 +76,7 @@
 
 ---
 
-## 🧪 Contoh Dataset (4 numerik + 2 kategori)
+## Contoh Dataset (4 numerik + 2 kategori)
 
 ```csv
 Revenue,Cost,Profit,GrowthRate,Category,Region
@@ -87,7 +87,7 @@ Revenue,Cost,Profit,GrowthRate,Category,Region
 
 ---
 
-## 📦 Cara Menjalankan
+## Cara Menjalankan
 
 ### 1. Jalankan React Frontend
 
@@ -109,14 +109,14 @@ npm run dev
 
 ---
 
-## 🔐 Catatan Tambahan
+## Catatan Tambahan
 
 - Beberapa fitur (prediksi, grafik) hanya berjalan jika file CSV valid dan kolom numerik dikenali otomatis.
 - Model ML sederhana (Linear Regression) digunakan agar tetap ringan dan realtime.
 
 ---
 
-## 🙌 Credits
+## Credits
 
 - Mentor referensi: Michael Gerber (`The E-Myth`), Stephen Covey (`7 Habits`), Eric Ries (`The Lean Startup`)
 - Dibuat untuk kebutuhan hackathon & sebagai fondasi AI bisnis personal.
